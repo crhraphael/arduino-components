@@ -5,6 +5,9 @@
 #include <Translators/Potentiometer/IPotentiometerInputTranslator.h>
 #include <Arduino.h>
 
+/**
+ * Controlador de velocidade e direcao de um motor dc com driver.
+ */
 class VelocityInputController {
 	private:
 	IServoInputTranslator *servoInputTranslator;
@@ -60,6 +63,7 @@ class VelocityInputController {
 		return dir;
 	}
 
+	
 	float getInput() {
 		float capValue = 1;
 		int potValue = this->potentiometerTranslator->read();
