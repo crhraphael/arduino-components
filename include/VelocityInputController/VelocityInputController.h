@@ -17,7 +17,11 @@ class VelocityInputController {
 	VelocityInputController(
 		IServoInputTranslator *servoInputTranslator,
 		IPotentiometerInputTranslator *potentiometerTranslator
-	)	{
+	):
+	NEUTRAL_POT_VALUE((int)(this->potentiometerTranslator->MAX_POT_VALUE() / 2)),
+	RIGHT(-1),
+	LEFT(1)
+	{
 		this->servoInputTranslator = servoInputTranslator;
 		this->potentiometerTranslator = potentiometerTranslator;
 	}
@@ -77,7 +81,6 @@ class VelocityInputController {
 	
 	void update() {
 		int potValue = this->potentiometerTranslator->read();
-
 		this->currentDirection = this->getDirection(potValue);
 		this->currentVelocity = this->getVelocity(potValue);
 
