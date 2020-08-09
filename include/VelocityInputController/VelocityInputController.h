@@ -11,15 +11,10 @@ class VelocityInputController {
 	IPotentiometerInputTranslator *potentiometerTranslator;
 
 	public:
-	// ~VelocityInputController();
 	VelocityInputController(
 		IServoInputTranslator *servoInputTranslator,
 		IPotentiometerInputTranslator *potentiometerTranslator
-	): 
-		NEUTRAL_POT_VALUE((int)(this->potentiometerTranslator->MAX_POT_VALUE() / 2)),
-		RIGHT(-1),
-		LEFT(1)
-	{
+	)	{
 		this->servoInputTranslator = servoInputTranslator;
 		this->potentiometerTranslator = potentiometerTranslator;
 	}
