@@ -3,7 +3,7 @@
 
 #include <Translators/Servo/IServoInputTranslator.h>
 #include <IArduinoCompontent.h>
-
+#include <Implementations/Servo/IServoImplementation.h>
 /**
  * Tradutor de dados customizado do Servo MG90S da `Tower Pro`.
  * 
@@ -15,26 +15,25 @@
  */
 class MG90SCustomTranslator: public IArduinoComponent, public IServoInputTranslator {
 	private:
-	Servo servo;
+	IServoImplementation* servoImpl;
 
 	public:
-	MG90SCustomTranslator(int pin): 
+	MG90SCustomTranslator(IServoImplementation* servoImpl): 
 		MAX_VELOCITY(10), 
 		SERVO_STOPPED_VALUE(135) 
 	{
-		pinMode(pin, OUTPUT);
-		this->servo.attach(pin);
+		this->servoImpl = servoImpl;
 	};
 
 	/**
 	 * Valor máximo da velocidade do motor.
 	 */
-	const int MAX_VELOCITY; 
+	const int MAX_VELOCITY = 10; 
 
 	/**
 	 * Valor que mantem o servo parado.
 	 */
-	const int SERVO_STOPPED_VALUE;
+	const int SERVO_STOPPED_VALUE = 135;
 
 
   int translate(float velocityCap, int dir) {
@@ -42,7 +41,7 @@ class MG90SCustomTranslator: public IArduinoComponent, public IServoInputTransla
 	}
   void setVelocity(float vel, int dir) {
 		int value = this->translate(vel, dir);
-		this->servo.write(value);
+		this->servoImpl->send(value);
 	}
 };
 

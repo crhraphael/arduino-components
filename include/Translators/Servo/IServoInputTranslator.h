@@ -1,8 +1,6 @@
 #ifndef ISERVOINPUTTRANSLATOR
 #define ISERVOINPUTTRANSLATOR
 
-#include <Servo.h>
-
 class IServoInputTranslator {
   private:
   public:
