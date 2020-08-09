@@ -1,5 +1,5 @@
 #include <VelocityInputController/VelocityInputController.h>
-#include <Translators/Servo/MG90S/MG90SControllerTranslator.h>
+#include <Translators/Servo/MG90S-DriverOnly/MG90SCustomTranslator.h>
 #include <Translators/Potentiometer/A50K/A50KPotentiometerTranslator.h>
 
 VelocityInputController *velocityController;
@@ -17,11 +17,9 @@ void setup()
 { 
   Serial.begin(9600);  
   
-  servoTranslator = new MG90SControllerTranslator(SERVO_PIN);
+  servoTranslator = new MG90SCustomTranslator(SERVO_PIN);
   potentiometerTranslator = new A50KPotentiometerTranslator(POT_PIN);
-
   velocityController = new VelocityInputController(servoTranslator, potentiometerTranslator);
-
 } 
 
  
