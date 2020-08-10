@@ -5,7 +5,7 @@
 class IPotentiometerInputTranslator: public IArduinoComponent {
 	private:
 	int pin;
-	int voltage;
+	float voltage;
 
   public:
   int translate();
@@ -19,7 +19,7 @@ class IPotentiometerInputTranslator: public IArduinoComponent {
 	/**
 	 * Valor maximo do potenciometro.
 	 */
-  virtual int MAX_POT_VALUE() = 0;
+  virtual float MAX_POT_VALUE() = 0;
 
 	/**
 	 * Valor de aceitacao para continuar na posição neutra.

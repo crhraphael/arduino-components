@@ -23,7 +23,7 @@ void setup()
 
   pinMode(VOLT_READ_PIN, INPUT);
   const int value = analogRead( VOLT_READ_PIN );
-  const int voltage = value * 5.0 / 1023.0;
+  const float voltage = value * 5.0 / 1023.0;
 
   servoImpl = new ServoImplementation(SERVO_PIN);
   potentiometerTranslator = new A50KPotentiometerTranslator(POT_PIN, voltage);

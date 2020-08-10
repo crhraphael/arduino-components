@@ -12,21 +12,20 @@ class VelocityInputController {
 	private:
 	IServoInputTranslator *servoInputTranslator;
 	IPotentiometerInputTranslator *potentiometerTranslator;
-
+  int neutralPotValue = 0;
 	public:
 	VelocityInputController(
 		IServoInputTranslator *servoInputTranslator,
 		IPotentiometerInputTranslator *potentiometerTranslator
 	):
-	NEUTRAL_POT_VALUE(this->potentiometerTranslator->MAX_POT_VALUE() / 2),
 	RIGHT(-1),
 	LEFT(1)
 	{
 		this->servoInputTranslator = servoInputTranslator;
 		this->potentiometerTranslator = potentiometerTranslator;
+		this->neutralPotValue = this->potentiometerTranslator->MAX_POT_VALUE() / 2;
 	}
 
-	const int NEUTRAL_POT_VALUE ;
 
 	const int RIGHT;
 	const int LEFT;
@@ -40,10 +39,10 @@ class VelocityInputController {
 	 */
 	float getVelocity(int potValue) {
 		float capValue = 1;
-		int potDiff = abs(this->NEUTRAL_POT_VALUE - potValue);
+		int potDiff = abs(this->neutralPotValue - potValue);
 
 		if(potValue > 0) {
-			capValue = (potDiff / (float)this->NEUTRAL_POT_VALUE);
+			capValue = (potDiff / (float)this->neutralPotValue);
 		}
 		return capValue;
 	}
@@ -52,7 +51,7 @@ class VelocityInputController {
 	 * Retorna a direcao do motor. 
 	 */
 	int getDirection(int potValue) {
-		int neutralPotVal = this->NEUTRAL_POT_VALUE;
+		int neutralPotVal = this->neutralPotValue;
 		int neutralPotSensitivity = this->potentiometerTranslator->NEUTRAL_POT_SENSITIVITY();
 		
 		int rightVal = neutralPotVal + neutralPotSensitivity;
@@ -71,10 +70,10 @@ class VelocityInputController {
 	float getInput() {
 		float capValue = 1;
 		int potValue = this->potentiometerTranslator->read();
-		int potDiff = abs(this->NEUTRAL_POT_VALUE - potValue);
+		int potDiff = abs(this->neutralPotValue - potValue);
 
 		if(potValue > 0) {
-			capValue = (potDiff / (float)this->NEUTRAL_POT_VALUE);
+			capValue = (potDiff / (float)this->neutralPotValue);
 		}
 		return capValue;
 	}

@@ -3,10 +3,10 @@
 class A50KPotentiometerTranslator: public IPotentiometerInputTranslator {
 	private:
 	int pin;
-	int voltage;
+	float voltage = 5.0f;
 
 	public:	
-	A50KPotentiometerTranslator(int pin, int voltage):
+	A50KPotentiometerTranslator(int pin, float voltage):
 		IPotentiometerInputTranslator(pin)
 	{
 		this->pin = pin;
@@ -14,7 +14,7 @@ class A50KPotentiometerTranslator: public IPotentiometerInputTranslator {
 		pinMode(pin, INPUT);
 	}
 
-  int MAX_POT_VALUE() { return this->voltage > 4 ? 1024 : 680; };
+  float MAX_POT_VALUE() { return (this->voltage > 4 ? 1023.0f : 680.0f); };
 
 	/**
 	 * Valor de aceitacao para continuar na posição neutra.
