@@ -5,6 +5,7 @@
 class IPotentiometerInputTranslator: public IArduinoComponent {
 	private:
 	int pin;
+	int voltage;
 
   public:
   int translate();

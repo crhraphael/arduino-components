@@ -28,12 +28,12 @@ class MG90SCustomTranslator: public IArduinoComponent, public IServoInputTransla
 	/**
 	 * Valor máximo da velocidade do motor.
 	 */
-	const int MAX_VELOCITY = 10; 
+	const int MAX_VELOCITY; 
 
 	/**
 	 * Valor que mantem o servo parado.
 	 */
-	const int SERVO_STOPPED_VALUE = 135;
+	const int SERVO_STOPPED_VALUE;
 
 
   int translate(float velocityCap, int dir) {

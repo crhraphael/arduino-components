@@ -18,7 +18,7 @@ class VelocityInputController {
 		IServoInputTranslator *servoInputTranslator,
 		IPotentiometerInputTranslator *potentiometerTranslator
 	):
-	NEUTRAL_POT_VALUE((int)(this->potentiometerTranslator->MAX_POT_VALUE() / 2)),
+	NEUTRAL_POT_VALUE(this->potentiometerTranslator->MAX_POT_VALUE() / 2),
 	RIGHT(-1),
 	LEFT(1)
 	{
@@ -26,10 +26,10 @@ class VelocityInputController {
 		this->potentiometerTranslator = potentiometerTranslator;
 	}
 
-	const int NEUTRAL_POT_VALUE = (int)(this->potentiometerTranslator->MAX_POT_VALUE() / 2);
+	const int NEUTRAL_POT_VALUE ;
 
-	const int RIGHT = -1;
-	const int LEFT = 1;
+	const int RIGHT;
+	const int LEFT;
 
 	float currentVelocity = 0;
 	int currentDirection = 0;
