@@ -2,8 +2,8 @@
 #define FS1000ATRANSMITTERTRANSLATOR
 
 #include <IArduinoCompontent.h>
-#include <RH_ASK.h>
-#include <SPI.h> 
+#include <Implementations/Wireless/RF/IWirelessRFImplementation.h>
+
 
 /**
  * Tradutor de dados do transmissor via RF FS1000A.
@@ -12,18 +12,16 @@
  */
 class FS1000ATransmitterTranslator: public IArduinoComponent {
 	private:
-  RH_ASK* driver;
+  IWirelessRFImplementation* rfImpl;
 	public:
-	FS1000ATransmitterTranslator(int pin, int bitsPerSec)
+	FS1000ATransmitterTranslator(IWirelessRFImplementation *rfImpl)
 	{
-		this->driver = new RH_ASK(bitsPerSec, pin, 12);
-  	if(this->driver->init()) Serial.println("init failed");
+		this->rfImpl = rfImpl;
 	};
 
 	void send (char *message)
 	{
-		this->driver->send((uint8_t *)message, strlen(message));
-		this->driver->waitPacketSent();
+		this->rfImpl->send(message);
 	}
 };
 
