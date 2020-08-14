@@ -41,7 +41,6 @@ class RadioHeadRFImplementation: public IWirelessRFImplementation, public RH_ASK
 			Serial.println("trying to read...");
 			Serial.println(this->driver.recv(buf, &buflen));
 			if (this->driver.recv(buf, &buflen)) {
-				this->driver.printBuffer("Received:", buf, buflen);
 				Serial.print("Received:");
 				for (i = 0; i < buflen; i++) Serial.print(buf[i]);
 				Serial.println("");
@@ -52,7 +51,6 @@ class RadioHeadRFImplementation: public IWirelessRFImplementation, public RH_ASK
 
 	void send(char *message)
 	{
-		//Serial.println("Trying to send...");
 		uint8_t* msg = (uint8_t *)message;
 		bool hasSent = this->driver.send(msg, strlen(message));
 		this->driver.waitPacketSent();
