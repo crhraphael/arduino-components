@@ -1,9 +1,10 @@
 // // 1:150 RC Car Receiver ATtiny1616 20200509 1700
 // #include <avr/io.h>
+// #include <Arduino.h>
 // #define F_CPU 3333333
 // #include <avr/interrupt.h>
 // #define pin PORTA.IN
-// #define stop TCA0.SINGLE.CMP1L=0;TCA0.SINGLE.CMP2L=0;
+// #define stop TCA0.SINGLE.CMP1L=0;TCA0.SINGLE.CMP2L=0
 
 // uint8_t ir=0x04,ib,fg,asb=3,str=127,rc=127,cti,ct;
 // int8_t dir;
