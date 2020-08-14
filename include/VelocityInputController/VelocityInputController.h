@@ -65,18 +65,6 @@ class VelocityInputController {
 
 		return dir;
 	}
-
-	
-	float getInput() {
-		float capValue = 1;
-		int potValue = this->potentiometerTranslator->read();
-		int potDiff = abs(this->neutralPotValue - potValue);
-
-		if(potValue > 0) {
-			capValue = (potDiff / (float)this->neutralPotValue);
-		}
-		return capValue;
-	}
 	
 	void update() {
 		int potValue = this->potentiometerTranslator->read();
