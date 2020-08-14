@@ -6,7 +6,9 @@ This project started as a learning process for a VSCODE extension called [Platfo
 
 The biggest incentive was to migrate from Arduino IDE to a more robust code editor. The codes found here are just pieces that I wrote for my personal projects and felt like it could be useful for later.
 
-About the code: ost of it may or may not be bad. They work for my purposes and are all results of a good amount of time spent learning C++ and it's compilers.
+About the code: Most of it may or may not be bad. They work for my purposes and are all results of a good amount of time spent learning C++ and it's compilers.
+
+There are dynamic allocations and I am trying to write all of it following the SOLID principles.
 
 To run, you must have at least one Arduino UNO and all components models declared in `main.cpp`. As this repository grows, many new components will be added and later surely it will need some reorganizing.
 If you know how those components works, you can build the circuit by yourself.
