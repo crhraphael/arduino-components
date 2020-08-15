@@ -21,11 +21,6 @@ class IPotentiometerInputTranslator: public IArduinoComponent {
 	 */
   virtual float MAX_POT_VALUE() = 0;
 
-	/**
-	 * Valor de aceitacao para continuar na posição neutra.
-	 */
-	virtual int NEUTRAL_POT_SENSITIVITY() = 0;
-	
   virtual int read() = 0;
 };
 IPotentiometerInputTranslator::~IPotentiometerInputTranslator() {};

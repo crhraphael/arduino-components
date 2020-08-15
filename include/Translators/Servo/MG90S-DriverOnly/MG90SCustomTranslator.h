@@ -4,6 +4,8 @@
 #include <Translators/Servo/IServoInputTranslator.h>
 #include <IArduinoCompontent.h>
 #include <Implementations/Servo/IServoImplementation.h>
+#include <InputControllers/IControllableComponent.h>
+
 /**
  * Tradutor de dados customizado do Servo MG90S da `Tower Pro`.
  * 
@@ -13,14 +15,14 @@
  * 
  * See: https://www.towerpro.com.tw/product/mg90s-3/
  */
-class MG90SCustomTranslator: public IArduinoComponent, public IServoInputTranslator {
+class MG90SCustomTranslator: public IArduinoComponent, public IServoInputTranslator, public IControllableComponent {
 	private:
 	IServoImplementation* servoImpl;
 
 	public:
 	MG90SCustomTranslator(IServoImplementation* servoImpl): 
 		MAX_VELOCITY(10), 
-		SERVO_STOPPED_VALUE(135) 
+		SERVO_STOPPED_VALUE(135)
 	{
 		this->servoImpl = servoImpl;
 	};
