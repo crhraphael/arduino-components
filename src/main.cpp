@@ -7,6 +7,7 @@
 
 #include <Translators/Wireless/RF/FS1000ATransmitterTranslator.h>
 #include <Translators/Wireless/RF/FS1000AReceiverTranslator.h>
+#include <Translators/Wireless/Bluetooth/HC06Translator.h>
 
 #include <InputControllers/InputController.h>
 #include <InputControllers/VelocityController.h>
@@ -14,13 +15,17 @@
 
 #include <Arduino.h>
 
-IServoInputTranslator *servoTranslator;
-IControllerComponent *potentiometerTranslator;
+IControllableComponent *servoComponent;
+IControllerComponent *potentiometerComponent;
+IControllerComponent *bluetoothComponent;
+
 IServoImplementation *servoImpl;
-BTSoftwareSerialImplementation *btImpl;
+IWirelessRFImplementation *rfImpl;
+IBluetoothImplementation *btImpl;
+
 FS1000ATransmitterTranslator *transmitterController;
 FS1000AReceiverTranslator *receiverController;
-IWirelessRFImplementation *rfImpl;
+
 
 InputController *inputController;
 SteeringController *steController;
@@ -33,25 +38,32 @@ const int SERVO_PIN = 9;
 const int POT_PIN = 0;
 const int VOLT_READ_PIN = 7;
 
-const int TRASMITTER_PIN = 8;
+const int TRANSMITTER_PIN = 2;
 const int RECEIVER_PIN = 3;
 
+const int DEFAULT_BAULD_RATE = 9600;
  
 void setup() 
 { 
-  Serial.begin(9600);
+  Serial.begin(DEFAULT_BAULD_RATE);
 
-  pinMode(VOLT_READ_PIN, INPUT);
-  const int value = analogRead( VOLT_READ_PIN );
-  const float voltage = value * 5.0 / 1023.0;
+  //pinMode(VOLT_READ_PIN, INPUT);
+  //const int value = analogRead( VOLT_READ_PIN );
+  //const float voltage = value * 5.0 / 1023.0;
 
 
   servoImpl = new ServoImplementation(SERVO_PIN);
-  servoTranslator = new MG90SCustomTranslator(servoImpl);
+  servoComponent = new MG90SCustomTranslator(servoImpl);
 
-  potentiometerTranslator = new A50KPotentiometerTranslator(POT_PIN, voltage, 1024);
+  // potentiometerComponent = new A50KPotentiometerTranslator(POT_PIN, voltage, 1024);
 
-  velController = new VelocityController(servoTranslator, potentiometerTranslator);
+  btImpl = new BTSoftwareSerialImplementation(
+    TRANSMITTER_PIN, 
+    RECEIVER_PIN, 
+    DEFAULT_BAULD_RATE);    
+  bluetoothComponent = new HC06Translator(btImpl, 1000);
+
+  velController = new VelocityController(servoComponent, bluetoothComponent);
   steController = new SteeringController();
   inputController = new InputController(steController, velController);
 
@@ -59,7 +71,6 @@ void setup()
   //transmitterController = new FS1000ATransmitterTranslator(rfImpl);
   //receiverController = new FS1000AReceiverTranslator(rfImpl);
 
-  // btImpl = new BTSoftwareSerialImplementation(2, 3, 9600);
 } 
 
 int send_or_receive = 1;
@@ -68,5 +79,5 @@ void loop()
 { 
   inputController->update();
   //btImpl->listen();
-  Serial.println(velController->getCurrentVelocity());
+  // Serial.println(velController->getCurrentVelocity());
 } 

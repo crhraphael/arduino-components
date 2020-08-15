@@ -15,7 +15,7 @@
  * 
  * See: https://www.towerpro.com.tw/product/mg90s-3/
  */
-class MG90SCustomTranslator: public IArduinoComponent, public IServoInputTranslator, public IControllableComponent {
+class MG90SCustomTranslator: public IArduinoComponent, public IControllableComponent {
 	private:
 	IServoImplementation* servoImpl;
 

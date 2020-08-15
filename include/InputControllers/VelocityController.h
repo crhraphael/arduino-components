@@ -12,7 +12,7 @@
  **/
 class VelocityController {
 	private:
-	IServoInputTranslator *controllableComponent;
+	IControllableComponent *controllableComponent;
 	IControllerComponent *controllerComponent;
   int neutralPointValue = 0;
 	int neutralPointSensitivity = 10;
@@ -23,7 +23,7 @@ class VelocityController {
 	
 	public:
 	VelocityController(
-		IServoInputTranslator *controllableComponent,
+		IControllableComponent *controllableComponent,
 		IControllerComponent *controllerComponent
 	):
 	RIGHT(-1),
@@ -52,10 +52,9 @@ class VelocityController {
 	 */
 	int getDirection(int potValue) {
 		int neutralPotVal = this->neutralPointValue;
-		int neutralPotSensitivity = this->neutralPointSensitivity;
 		
-		int rightVal = neutralPotVal + neutralPotSensitivity;
-		int leftVal = neutralPotVal - neutralPotSensitivity;
+		int rightVal = neutralPotVal + this->neutralPointSensitivity;
+		int leftVal = neutralPotVal - this->neutralPointSensitivity;
 		
 		int dir = (potValue > rightVal)
 			? this->RIGHT
@@ -67,7 +66,11 @@ class VelocityController {
 	}
 	
 	void update() {
-		int potValue = this->controllerComponent->read();
+		char *buff = new char('B');
+		this->controllerComponent->read(buff);
+		//Serial.print('A');
+		//Serial.print(buff);
+		int potValue = 500;//(int)(this->controllerComponent->read(buff) - '0');
 		this->reverse = this->getDirection(potValue);
 		this->currentVelocity = this->translateVelocity(potValue);
 

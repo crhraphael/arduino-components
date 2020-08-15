@@ -32,7 +32,7 @@ class BTSoftwareSerialImplementation: public IBluetoothImplementation {
 	bool isFillingBuffer() {
 		bool isAvailable = this->driver.available();
 		if(isAvailable){ 
-			char currentChar(this->driver.read());
+			char currentChar = this->driver.read();
 			this->buffer[this->cursor] = currentChar;
 			this->cursor += 1;
 		}
@@ -40,23 +40,18 @@ class BTSoftwareSerialImplementation: public IBluetoothImplementation {
 		return new bool(isAvailable);
 	}
 
-	char* getMessage() {
+	void getMessage(char *msg) {
 		uint8_t i;
-		char msg[this->cursor - 7];
-		Serial.print(this->buffer);
 
 		for(i = 0; i < this->cursor; i++) msg[i] = this->buffer[i];
-
-		return new char(*msg);
 	}
 
-	char* listen()
+	void listen(char *buf)
 	{
-		if(this->isFillingBuffer()) return '\0';		
-    char* msg = this->getMessage();
-		this->reset();
-
-		return msg;
+		if(!this->isFillingBuffer()) {
+			this->getMessage(buf);
+			this->reset();
+		}
 	}
 };
 

@@ -20,8 +20,6 @@ class IPotentiometerInputTranslator: public IArduinoComponent {
 	 * Valor maximo do potenciometro.
 	 */
   virtual float MAX_POT_VALUE() = 0;
-
-  virtual int read() = 0;
 };
 IPotentiometerInputTranslator::~IPotentiometerInputTranslator() {};
 
