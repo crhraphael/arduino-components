@@ -60,7 +60,8 @@ void setup()
   btImpl = new BTSoftwareSerialImplementation(
     TRANSMITTER_PIN, 
     RECEIVER_PIN, 
-    DEFAULT_BAULD_RATE);    
+    DEFAULT_BAULD_RATE,
+    '.');    
   bluetoothComponent = new HC06Translator(btImpl, 1000);
 
   velController = new VelocityController(servoComponent, bluetoothComponent);

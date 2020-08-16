@@ -64,13 +64,29 @@ class VelocityController {
 
 		return dir;
 	}
+
+	int inputValue = 500;
 	
 	void update() {
-		char *buff = new char('B');
+		char buff[] = {'\0'};
+		char debug[] = {'\0'};
+
+		// int *bf = 0;
+		// this->controllerComponent->readInt(bf);
+		
+		// if(*bf != 0) {
+		//  	Serial.print("Intereger: ");
+		//  	Serial.println(*bf);
+		// }
+
 		this->controllerComponent->read(buff);
-		//Serial.print('A');
-		//Serial.print(buff);
-		int potValue = 500;//(int)(this->controllerComponent->read(buff) - '0');
+		if(strcmp(buff, debug) != 0) {
+			this->inputValue = atoi(buff);
+		 	Serial.print("Char: ");
+			Serial.println(atoi(buff));
+		}
+
+		int potValue = this->inputValue;
 		this->reverse = this->getDirection(potValue);
 		this->currentVelocity = this->translateVelocity(potValue);
 

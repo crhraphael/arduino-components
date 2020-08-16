@@ -21,9 +21,6 @@ class HC06Translator: public IArduinoComponent, public IControllerComponent {
 
 	void read(char *buf) {
 		this->implm->listen(buf);
-		// if (buf != '\0')	{
-		// 	Serial.println(buf);
-		// }
 	}
 };
 

@@ -11,7 +11,6 @@ class IBluetoothImplementation {
 
 	virtual void reset() = 0;
 	virtual bool isFillingBuffer() = 0;
-	virtual void getMessage(char *buff) = 0;
 };
 
 IBluetoothImplementation::~IBluetoothImplementation() {};
