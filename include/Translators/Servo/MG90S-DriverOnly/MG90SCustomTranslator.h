@@ -38,11 +38,11 @@ class MG90SCustomTranslator: public IArduinoComponent, public IControllableCompo
 	const int SERVO_STOPPED_VALUE;
 
 
-  int translate(float velocityCap, int dir) {
-		return (int)(this->SERVO_STOPPED_VALUE + (dir * (MG90SCustomTranslator::MAX_VELOCITY * velocityCap)));
+  int translate(float velocityCap) {
+		return (int)(this->SERVO_STOPPED_VALUE + (MG90SCustomTranslator::MAX_VELOCITY * velocityCap));
 	}
-  void setVelocity(float vel, int dir) {
-		int value = this->translate(vel, dir);
+  void set(float vel) {
+		int value = this->translate(vel);
 		this->servoImpl->send(value);
 	}
 };

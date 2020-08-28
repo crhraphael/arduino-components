@@ -7,7 +7,7 @@ class IServoInputTranslator {
   virtual ~IServoInputTranslator() = 0;
 
   virtual int translate(float vel, int dir) = 0;
-  virtual void setVelocity(float vel, int dir) = 0;
+  virtual void set(float vel, int dir) = 0;
 };
 
 IServoInputTranslator::~IServoInputTranslator() {};

@@ -19,7 +19,7 @@ class VelocityController {
 	const int RIGHT;
 	const int LEFT;
 	float currentVelocity = 0;
-	int reverse = 0;
+	int reverse = -1;
 	
 	public:
 	VelocityController(
@@ -89,8 +89,8 @@ class VelocityController {
 		int potValue = this->inputValue;
 		this->reverse = this->getDirection(potValue);
 		this->currentVelocity = this->translateVelocity(potValue);
-
-		this->controllableComponent->setVelocity(this->currentVelocity, this->reverse);
+		Serial.println(this->currentVelocity);
+		this->controllableComponent->set(this->reverse * this->currentVelocity);
 	}
 
 	float getCurrentVelocity() {

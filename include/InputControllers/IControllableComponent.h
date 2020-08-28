@@ -4,7 +4,7 @@
 class IControllableComponent {
 	private:
 	public:
-  virtual void setVelocity(float vel,int dir) = 0;
+  virtual void set(float vel) = 0;
 };
 
 #endif

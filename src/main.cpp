@@ -1,15 +1,17 @@
 #include <examples/MotorBluetoothExample.h>
 
 MotorBluetoothExample* impl = new MotorBluetoothExample();
+
+const int LED = 6;
+
 void setup() 
 { 
+  // pinMode(LED, OUTPUT);
+  // digitalWrite(LED, LOW);
   impl->setup();
 } 
-
-int send_or_receive = 1;
  
 void loop()
 { 
   impl->loop();
-
 } 
