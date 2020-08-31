@@ -29,6 +29,12 @@ const int DEFAULT_BAULD_RATE = 9600;
 const char END_MSG_BT = '.';
 
 
+/**
+ * Experiment using an Arduino UNO as prototype board
+ * 
+ * It controls the velocity and direction of a DC Motor 
+ * by interacting with it's driver directly.
+ **/
 class MotorBluetoothExample {
 	IControllableComponent *servoComponent;
 

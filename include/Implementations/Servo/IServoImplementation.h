@@ -1,8 +1,6 @@
 #ifndef ISERVOIMPLEMENTATION
 #define ISERVOIMPLEMENTATION
 
-#include <Arduino.h>
-
 class IServoImplementation {
   private:
   public:

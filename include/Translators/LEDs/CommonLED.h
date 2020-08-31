@@ -16,8 +16,8 @@ class CommonLED: public IArduinoComponent, public IControllableComponent {
 		pinMode(pin, OUTPUT);
 	}
 
-  void set(float vel) {
-		analogWrite(this->pin, (int)vel);
+  void set(float val) {
+		digitalWrite(this->pin, (int)val);
 	}
 };
 

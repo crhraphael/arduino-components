@@ -1,7 +1,6 @@
 #ifndef MG90SCUSTOMTRANSLATOR
 #define MG90SCUSTOMTRANSLATOR
 
-#include <Translators/Servo/IServoInputTranslator.h>
 #include <IArduinoCompontent.h>
 #include <Implementations/Servo/IServoImplementation.h>
 #include <InputControllers/IControllableComponent.h>

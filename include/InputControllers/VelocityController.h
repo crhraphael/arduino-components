@@ -71,14 +71,6 @@ class VelocityController {
 		char buff[] = {'\0'};
 		char debug[] = {'\0'};
 
-		// int *bf = 0;
-		// this->controllerComponent->readInt(bf);
-		
-		// if(*bf != 0) {
-		//  	Serial.print("Intereger: ");
-		//  	Serial.println(*bf);
-		// }
-
 		this->controllerComponent->read(buff);
 		if(strcmp(buff, debug) != 0) {
 			this->inputValue = atoi(buff);
@@ -86,10 +78,8 @@ class VelocityController {
 			Serial.println(atoi(buff));
 		}
 
-		int potValue = this->inputValue;
-		this->reverse = this->getDirection(potValue);
-		this->currentVelocity = this->translateVelocity(potValue);
-		Serial.println(this->currentVelocity);
+		this->reverse = this->getDirection(this->inputValue);
+		this->currentVelocity = this->translateVelocity(this->inputValue);
 		this->controllableComponent->set(this->reverse * this->currentVelocity);
 	}
 

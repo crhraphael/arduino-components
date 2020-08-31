@@ -1,13 +1,10 @@
-#include <examples/MotorBluetoothExample.h>
+#include <examples/ESP32LolinMotorExample.h>
 
-MotorBluetoothExample* impl = new MotorBluetoothExample();
+ESP32LolinMotorExample* impl = new ESP32LolinMotorExample();
 
-const int LED = 6;
 
 void setup() 
 { 
-  // pinMode(LED, OUTPUT);
-  // digitalWrite(LED, LOW);
   impl->setup();
 } 
  
