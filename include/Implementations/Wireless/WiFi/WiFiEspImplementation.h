@@ -4,8 +4,6 @@
 #include <Implementations/Wireless/WiFi/IWirelessWiFiImplementation.h>
 
 /**
- * TODO: Ver necessidade de separar receiver e transmitter em arquivos distintos.
- * 
  * WiFiEsp e uma lib focada em transmissoes via WiFi para placas ESP (NodeMCU).
  * 
  * É totalmente compatível com o arduino caso ele possua o firmware 

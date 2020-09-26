@@ -1,7 +1,6 @@
 #ifndef SERVOIMPLEMENTATION
 #define SERVOIMPLEMENTATION
 
-#include <Translators/Servo/IServoInputTranslator.h>
 #include <Implementations/Servo/IServoImplementation.h>
 #include <Servo.h>
 #include <Arduino.h>

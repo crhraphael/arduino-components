@@ -1,5 +1,7 @@
-#ifndef ESP#@LOLINLEDEXAMPLE
-#define ESP#@LOLINLEDEXAMPLE
+#ifndef ESP32LOLINLEDEXAMPLE
+#define ESP32LOLINLEDEXAMPLE
+
+
 
 #include <Translators/LEDs/CommonLED.h>
 

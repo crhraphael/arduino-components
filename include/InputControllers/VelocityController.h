@@ -20,6 +20,8 @@ class VelocityController {
 	const int LEFT;
 	float currentVelocity = 0;
 	int reverse = -1;
+	int inputValue = 500;
+
 	
 	public:
 	VelocityController(
@@ -65,8 +67,6 @@ class VelocityController {
 		return dir;
 	}
 
-	int inputValue = 500;
-	
 	void update() {
 		char buff[] = {'\0'};
 		char debug[] = {'\0'};

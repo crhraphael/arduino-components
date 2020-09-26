@@ -1,7 +1,8 @@
 #ifndef ESP32LOLINMOTOREXAMPLE
 #define ESP32LOLINMOTOREXAMPLE
+#include <Implementations/Servo/ServoImplementation.h>
 
-#include <Implementations/Servo/ESP32ServoImplementation.h>
+// #include <Implementations/Wireless/WiFi/ESP8266WiFiImplementation.h>
 
 #include <Translators/Servo/MG90S-DriverOnly/MG90SCustomTranslator.h>
 #include <Translators/Potentiometer/A50K/A50KPotentiometerTranslator.h>
@@ -28,13 +29,12 @@
 // TX   	GPIO1    TX pin						OK			HIGH at boot debug output at boot, boot fails if pulled LOW
 // A0   	ADC0    Analog Input			X	
 
-#define D1 5;
-#define D7 13;
 /**
  * Portas dos devices.
  */
-const int SERVO_PIN = D1; 
-const int POT_PIN = D7;
+const int SERVO_DIRECTION_PIN = D1; 
+const int SERVO_VELOCITY_PIN = D7; 
+const int POT_PIN = A0;
 
 const int DEFAULT_BAULD_RATE = 9600;
 
@@ -49,23 +49,28 @@ const char END_MSG_BT = '.';
  * modifying the potentiometer axle.
  **/
 class ESP32LolinMotorExample {
-	IControllableComponent *servoComponent;
+	IControllableComponent *servoDirComp;
+	IControllableComponent *servoVelComp;
 
 	IControllerComponent *potentiometerComponent;
 
-	IServoImplementation *servoImpl;
+	IServoImplementation *servoDirImpl;
+	IServoImplementation *servoVelImpl;
 
 	InputController *inputController;
 	SteeringController *steController;
 	VelocityController *velController;
 	
-	void defineServoDevice() {
-		this->servoImpl = new ESP32ServoImplementation(SERVO_PIN);
-		this->servoComponent = new MG90SCustomTranslator(this->servoImpl);
+	void defineServoDevices() {
+		this->servoDirImpl = new ServoImplementation(SERVO_DIRECTION_PIN);
+		this->servoDirComp = new MG90SCustomTranslator(this->servoDirImpl);
+
+		this->servoVelImpl = new ServoImplementation(SERVO_VELOCITY_PIN);
+		this->servoVelComp = new MG90SCustomTranslator(this->servoVelImpl);
 	}
 
 	void definePotentiometerDevice() {
-		this->potentiometerComponent = new A50KPotentiometerTranslator(POT_PIN, 3.3f, 720);
+		this->potentiometerComponent = new A50KPotentiometerTranslator(POT_PIN, 5.0f, 1024);
 	}
 
 	public:
@@ -73,20 +78,22 @@ class ESP32LolinMotorExample {
 	{ 
 		Serial.begin(DEFAULT_BAULD_RATE);
 
-		this->defineServoDevice();
+		this->defineServoDevices();
 		this->definePotentiometerDevice();
 		
 		this->velController = new VelocityController(
-			this->servoComponent, 
+			this->servoVelComp, 
 			this->potentiometerComponent);
-		this->steController = new SteeringController();
-
+		this->steController = new SteeringController(			
+			this->servoDirComp, 
+			this->potentiometerComponent);
 	} 
 	 
 	void loop()
 	{ 
+		this->steController->update();
 		this->velController->update();
-		///Serial.println((int)this->velController->getCurrentVelocity());
+		//Serial.println((int)this->velController->getCurrentVelocity());
 	} 
 };
 

@@ -19,6 +19,6 @@ class A50KPotentiometerTranslator: public IPotentiometerInputTranslator, public 
   float MAX_POT_VALUE() { return (this->voltage > 4 ? 1023.0f : 680.0f); };
 
 	void read(char *buff) {
-		buff = new char(analogRead(this->pin));
+		itoa(analogRead(this->pin), buff, 10);
 	}
 };
