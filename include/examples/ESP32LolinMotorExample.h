@@ -2,11 +2,12 @@
 #define ESP32LOLINMOTOREXAMPLE
 #include <Implementations/Servo/ServoImplementation.h>
 
-// #include <Implementations/Wireless/WiFi/ESP8266WiFiImplementation.h>
+#include <Implementations/Wireless/WiFi/ESP8266WiFiImplementation.h>
 
 #include <Translators/Servo/MG90S-DriverOnly/MG90SCustomTranslator.h>
 #include <Translators/Potentiometer/A50K/A50KPotentiometerTranslator.h>
 #include <Translators/LEDs/CommonLED.h>
+#include <Translators/Wireless/WIFI/ESP12ETranslator.h>
 
 #include <InputControllers/InputController.h>
 #include <InputControllers/VelocityController.h>
@@ -51,11 +52,14 @@ const char END_MSG_BT = '.';
 class ESP32LolinMotorExample {
 	IControllableComponent *servoDirComp;
 	IControllableComponent *servoVelComp;
-
+	
+	IWirelessCommComponent *esp12eComp;
 	IControllerComponent *potentiometerComponent;
 
 	IServoImplementation *servoDirImpl;
 	IServoImplementation *servoVelImpl;
+
+	IWirelessWiFiImplementation *esp12eImpl;
 
 	InputController *inputController;
 	SteeringController *steController;
@@ -80,6 +84,9 @@ class ESP32LolinMotorExample {
 
 		this->defineServoDevices();
 		this->definePotentiometerDevice();
+
+		this->esp12eImpl = new ESP8266WiFiImplementation("mraphael", "1andcrh2", 88);
+		this->esp12eComp = new ESP12ETranslator(this->esp12eImpl);
 		
 		this->velController = new VelocityController(
 			this->servoVelComp, 
