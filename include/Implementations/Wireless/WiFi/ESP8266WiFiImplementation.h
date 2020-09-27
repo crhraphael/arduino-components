@@ -29,8 +29,8 @@ class ESP8266WiFiImplementation: public IWirelessWiFiImplementation {
 
 	public:
 	ESP8266WiFiImplementation(
-		char* ssid, 
-		char* password, 
+		char *ssid, 
+		char *password, 
 		int websocketPort)
 	: 
 		webSocket(websocketPort) 

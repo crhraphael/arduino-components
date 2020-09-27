@@ -84,12 +84,10 @@ class ESP32LolinMotorExample {
 
 		//this->defineServoDevices();
 		//this->definePotentiometerDevice();
-
-		this->esp12eImpl = new ESP8266WiFiImplementation(
-			"MR2", 
-			"1andcrh2", 
-			81
-		);
+		char *SSID = "********";
+		char *PASS = "********";
+		int PORT = 81;
+		this->esp12eImpl = new ESP8266WiFiImplementation(SSID, PASS, PORT);
 		this->esp12eComp = new ESP12ETranslator(this->esp12eImpl);
 		// this->esp12eComp->listen();
 		// this->velController = new VelocityController(
