@@ -35,14 +35,28 @@ class ESP8266WiFiImplementation: public IWirelessWiFiImplementation {
 	: 
 		webSocket(websocketPort) 
 	{
+
+		// int numberOfNetworks = this->wifiImpl.scanNetworks();
+
+		// for(int i =0; i<numberOfNetworks; i++){
+
+		// 		Serial.print("Network name: ");
+		// 		Serial.println(this->wifiImpl.SSID(i));
+		// 		Serial.print("Signal strength: ");
+		// 		Serial.println(this->wifiImpl.RSSI(i));
+		// 		Serial.println("-----------------------");
+
+		// }
 		this->wifiImpl.begin(ssid, password);
 		while (this->wifiImpl.status() != WL_CONNECTED) {
-			Serial.print(". ");
+			Serial.print(".");
+			Serial.print(this->wifiImpl.status());
 			delay(100);
 		}
 		Serial.println(this->wifiImpl.localIP());
 		
 		this->webSocket.begin();
+		Serial.print(this->wifiImpl.status());
 		this->webSocket.onEvent(
 			std::bind(
 				&ESP8266WiFiImplementation::webSocketEvent, 
@@ -54,20 +68,20 @@ class ESP8266WiFiImplementation: public IWirelessWiFiImplementation {
 	};
 
 	void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t lenght) {
-		// switch (type) {
-		// 	case WStype_DISCONNECTED:
-		// 		break;
+		switch (type) {
+			case WStype_DISCONNECTED:
+				break;
 	
-		// 	case WStype_CONNECTED:
-		// 		{ IPAddress ip = this->webSocket.remoteIP(num);
-		// 			Serial.println(ip);
-		// 		}
-		// 		break;
+			case WStype_CONNECTED:
+				{ IPAddress ip = this->webSocket.remoteIP(num);
+					Serial.println(ip);
+				}
+				break;
 	
-		// 	case WStype_TEXT:
-		// 		break;
+			case WStype_TEXT:
+				break;
 	
-		// }
+		}
 	
 	}
 
@@ -78,6 +92,7 @@ class ESP8266WiFiImplementation: public IWirelessWiFiImplementation {
 
 	void send(char *message)
 	{
+		this->webSocket.sendTXT(0, message);
 	}
 };
  

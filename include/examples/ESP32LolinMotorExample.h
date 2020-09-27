@@ -82,24 +82,36 @@ class ESP32LolinMotorExample {
 	{ 
 		Serial.begin(DEFAULT_BAULD_RATE);
 
-		this->defineServoDevices();
-		this->definePotentiometerDevice();
+		//this->defineServoDevices();
+		//this->definePotentiometerDevice();
 
-		this->esp12eImpl = new ESP8266WiFiImplementation("mraphael", "1andcrh2", 88);
+		this->esp12eImpl = new ESP8266WiFiImplementation(
+			"MR2", 
+			"1andcrh2", 
+			81
+		);
 		this->esp12eComp = new ESP12ETranslator(this->esp12eImpl);
-		
-		this->velController = new VelocityController(
-			this->servoVelComp, 
-			this->potentiometerComponent);
-		this->steController = new SteeringController(			
-			this->servoDirComp, 
-			this->potentiometerComponent);
+		// this->esp12eComp->listen();
+		// this->velController = new VelocityController(
+		// 	this->servoVelComp, 
+		// 	this->potentiometerComponent);
+		// this->steController = new SteeringController(			
+		// 	this->servoDirComp, 
+		// 	this->potentiometerComponent);
 	} 
-	 
+	int i = 0;
 	void loop()
 	{ 
-		this->steController->update();
-		this->velController->update();
+		char* a = "0";
+		itoa(i, a, 10);
+		i += 1;
+		//this->steController->update();
+		//this->velController->update();
+
+		char *b = "q";
+		this->esp12eComp->listen(b);
+		this->esp12eComp->send(a);
+
 		//Serial.println((int)this->velController->getCurrentVelocity());
 	} 
 };
