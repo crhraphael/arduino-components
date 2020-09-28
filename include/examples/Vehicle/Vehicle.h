@@ -9,7 +9,7 @@
 #include <Translators/LEDs/CommonLED.h>
 
 #include <InputControllers/InputController.h>
-#include <InputControllers/VelocityController.h>
+#include <InputControllers/AccelerationController.h>
 #include <InputControllers/SteeringController.h>
 
 #include <Arduino.h>

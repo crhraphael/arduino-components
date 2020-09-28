@@ -2,7 +2,7 @@
 #define INPUTCONTROLLER
 
 #include <InputControllers/SteeringController.h>
-#include <InputControllers/VelocityController.h>
+#include <InputControllers/AccelerationController.h>
 #include <InputControllers/BrakeLightsController.h>
 #include <InputControllers/TurnLightsController.h>
 #include <InputControllers/HeadLightsController.h>
@@ -18,7 +18,7 @@ class InputController {
 	int direction = 0;
 	int reverse = 0;
 	SteeringController* steController;
-	VelocityController* velController;
+	AccelerationController* accelController;
 	HeadLightsController *headLightsController;
 	TurnLightsController *turnLightsController;
 	BrakeLightsController *brakeLightsController;
@@ -27,14 +27,14 @@ class InputController {
 	public:
 	InputController(
 		SteeringController *steController, 
-		VelocityController *velController,
+		AccelerationController *accelController,
 		HeadLightsController *headLightsController,
 		TurnLightsController *turnLightsController,
 		BrakeLightsController *brakeLightsController,
 		RearLightsController *rearLightsController
 	)	{
 		this->steController = steController;
-		this->velController = velController;
+		this->accelController = accelController;
 		this->headLightsController = headLightsController;
 		this->turnLightsController = turnLightsController;
 		this->brakeLightsController = brakeLightsController;
@@ -42,7 +42,7 @@ class InputController {
 	}
 
 	void update() {
-		this->velController->update();
+		this->accelController->update();
 	}
 };
 

@@ -10,7 +10,7 @@
 #include <Translators/Wireless/WIFI/ESP12ETranslator.h>
 
 #include <InputControllers/InputController.h>
-#include <InputControllers/VelocityController.h>
+#include <InputControllers/AccelerationController.h>
 #include <InputControllers/SteeringController.h>
 
 #include <Arduino.h>
@@ -63,7 +63,7 @@ class ESP32LolinMotorExample {
 
 	InputController *inputController;
 	SteeringController *steController;
-	VelocityController *velController;
+	AccelerationController *accelController;
 	
 	void defineServoDevices() {
 		this->servoDirImpl = new ServoImplementation(SERVO_DIRECTION_PIN);
@@ -90,7 +90,7 @@ class ESP32LolinMotorExample {
 		this->esp12eImpl = new ESP8266WiFiImplementation(SSID, PASS, PORT);
 		this->esp12eComp = new ESP12ETranslator(this->esp12eImpl);
 		// this->esp12eComp->listen();
-		// this->velController = new VelocityController(
+		// this->accelController = new AccelerationController(
 		// 	this->servoVelComp, 
 		// 	this->potentiometerComponent);
 		// this->steController = new SteeringController(			
@@ -104,13 +104,13 @@ class ESP32LolinMotorExample {
 		itoa(i, a, 10);
 		i += 1;
 		//this->steController->update();
-		//this->velController->update();
+		//this->accelController->update();
 
 		char *b = "q";
 		this->esp12eComp->listen(b);
 		this->esp12eComp->send(a);
 
-		//Serial.println((int)this->velController->getCurrentVelocity());
+		//Serial.println((int)this->accelController->getCurrentVelocity());
 	} 
 };
 

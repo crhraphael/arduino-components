@@ -1,5 +1,5 @@
-#ifndef VELOCITYCONTROLLER
-#define VELOCITYCONTROLLER
+#ifndef ACCELERATIONCONTROLLER
+#define ACCELERATIONCONTROLLER
 
 #include <Translators/Servo/MG90S-DriverOnly/MG90SCustomTranslator.h>
 #include <Translators/Potentiometer/IPotentiometerInputTranslator.h>
@@ -10,7 +10,7 @@
 /**
  * Tradutor de dados 
  **/
-class VelocityController {
+class AccelerationController {
 	private:
 	IControllableComponent *controllableComponent;
 	IControllerComponent *controllerComponent;
@@ -24,7 +24,7 @@ class VelocityController {
 
 	
 	public:
-	VelocityController(
+	AccelerationController(
 		IControllableComponent *controllableComponent,
 		IControllerComponent *controllerComponent
 	):
