@@ -110,7 +110,9 @@ class ESP32LolinMotorExample {
 		this->esp12eComp->listen(b);
 		this->esp12eComp->send(a);
 
-		//Serial.println((int)this->accelController->getCurrentVelocity());
+
+
+		//Serial.println((int)this->accelController->getCurrentAcceleration());
 	} 
 };
 

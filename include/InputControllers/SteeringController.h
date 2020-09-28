@@ -18,7 +18,7 @@ class SteeringController {
 	int neutralPointSensitivity = 10;
 	const int RIGHT;
 	const int LEFT;
-	float currentVelocity = 0;
+	float currentAcceleration = 0;
 	int direction = -1;
 	int inputValue = 500;
 	
@@ -77,7 +77,7 @@ class SteeringController {
 		}
 
 		this->direction = this->getDirection(this->inputValue);
-		this->currentVelocity = this->translateVelocity(this->inputValue);
+		this->currentAcceleration = this->translateVelocity(this->inputValue);
 		
 		int mapVal = map(
 			this->inputValue, 
@@ -91,8 +91,8 @@ class SteeringController {
 
 	}
 
-	float getCurrentVelocity() {
-		return this->currentVelocity;
+	float getCurrentAcceleration() {
+		return this->currentAcceleration;
 	}
 };
 

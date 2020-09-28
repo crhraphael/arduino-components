@@ -14,7 +14,7 @@
 class InputController {
 	private:
 	float turningPoint = .0f;
-	float currentVelocity = .0f;
+	float currentAcceleration = .0f;
 	int direction = 0;
 	int reverse = 0;
 	SteeringController* steController;

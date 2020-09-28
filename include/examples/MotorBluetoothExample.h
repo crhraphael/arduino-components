@@ -130,7 +130,7 @@ class MotorBluetoothExample {
 	void loop()
 	{ 
 		this->accelController->update();
-		///Serial.println((int)this->accelController->getCurrentVelocity());
+		///Serial.println((int)this->accelController->getCurrentAcceleration());
 	} 
 };
 

@@ -18,7 +18,7 @@ class AccelerationController {
 	int neutralPointSensitivity = 10;
 	const int RIGHT;
 	const int LEFT;
-	float currentVelocity = 0;
+	float currentAcceleration = 0;
 	int reverse = -1;
 	int inputValue = 500;
 
@@ -79,12 +79,12 @@ class AccelerationController {
 		}
 
 		this->reverse = this->getDirection(this->inputValue);
-		this->currentVelocity = this->translateVelocity(this->inputValue);
-		this->controllableComponent->set(this->reverse * this->currentVelocity);
+		this->currentAcceleration = this->translateVelocity(this->inputValue);
+		this->controllableComponent->set(this->reverse * this->currentAcceleration);
 	}
 
-	float getCurrentVelocity() {
-		return this->currentVelocity;
+	float getCurrentAcceleration() {
+		return this->currentAcceleration;
 	}
 };
 
