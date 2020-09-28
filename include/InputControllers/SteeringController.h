@@ -38,7 +38,7 @@ class SteeringController {
 	/**
 	 * Retorna a velocidade do motor. 
 	 */
-	float translateVelocity(int potValue) {
+	float translateAcceleration(int potValue) {
 		float capValue = 1;
 		int potDiff = abs(this->neutralPointValue - potValue);
 
@@ -77,7 +77,7 @@ class SteeringController {
 		}
 
 		this->direction = this->getDirection(this->inputValue);
-		this->currentAcceleration = this->translateVelocity(this->inputValue);
+		this->currentAcceleration = this->translateAcceleration(this->inputValue);
 		
 		int mapVal = map(
 			this->inputValue, 

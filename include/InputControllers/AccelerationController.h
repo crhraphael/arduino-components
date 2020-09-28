@@ -39,7 +39,7 @@ class AccelerationController {
 	/**
 	 * Retorna a velocidade do motor. 
 	 */
-	float translateVelocity(int potValue) {
+	float translateAcceleration(int potValue) {
 		float capValue = 1;
 		int potDiff = abs(this->neutralPointValue - potValue);
 
@@ -79,7 +79,7 @@ class AccelerationController {
 		}
 
 		this->reverse = this->getDirection(this->inputValue);
-		this->currentAcceleration = this->translateVelocity(this->inputValue);
+		this->currentAcceleration = this->translateAcceleration(this->inputValue);
 		this->controllableComponent->set(this->reverse * this->currentAcceleration);
 	}
 

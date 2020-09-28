@@ -20,7 +20,7 @@ class MG90SCustomTranslator: public IArduinoComponent, public IControllableCompo
 
 	public:
 	MG90SCustomTranslator(IServoImplementation* servoImpl): 
-		MAX_VELOCITY(10), 
+		MAX_ACCELERATION(10), 
 		SERVO_STOPPED_VALUE(135)
 	{
 		this->servoImpl = servoImpl;
@@ -29,7 +29,7 @@ class MG90SCustomTranslator: public IArduinoComponent, public IControllableCompo
 	/**
 	 * Valor máximo da velocidade do motor.
 	 */
-	const int MAX_VELOCITY; 
+	const int MAX_ACCELERATION; 
 
 	/**
 	 * Valor que mantem o servo parado.
@@ -37,8 +37,8 @@ class MG90SCustomTranslator: public IArduinoComponent, public IControllableCompo
 	const int SERVO_STOPPED_VALUE;
 
 
-  int translate(float velocityCap) {
-		return (int)(this->SERVO_STOPPED_VALUE + (MG90SCustomTranslator::MAX_VELOCITY * velocityCap));
+  int translate(float accelCap) {
+		return (int)(this->SERVO_STOPPED_VALUE + (MG90SCustomTranslator::MAX_ACCELERATION * accelCap));
 	}
   void set(float vel) {
 		int value = this->translate(vel);

@@ -17,7 +17,7 @@
 
 class Vehicle {
 	IControllableComponent* steeringMotor;
-	IControllableComponent* velocityMotor;
+	IControllableComponent* accelerationMotor;
 
 	CommonLED* commonLED;
 
@@ -35,8 +35,8 @@ class Vehicle {
 	bool isEngineOn = false;
 
 	public:
-	Vehicle(IControllableComponent* velocityMotor) {
-		this->velocityMotor = velocityMotor;
+	Vehicle(IControllableComponent* accelerationMotor) {
+		this->accelerationMotor = accelerationMotor;
 		this->commonLED = new CommonLED(1);
 		this->commonLED->set(HIGH);
 	}

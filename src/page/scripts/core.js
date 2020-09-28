@@ -54,14 +54,14 @@ class Core {
 
 	constructor() {
 		this.interval = 100;
-		this.velocityInput = document.querySelector('#velocity-input');
-		this.velocityInput.setAttribute('max', 1024);
-		this.velocityInput.setAttribute('min', 0);
-		this.velocityInput.setAttribute('value', 1024 / 2);
+		this.accelerationInput = document.querySelector('#acceleration-input');
+		this.accelerationInput.setAttribute('max', 1024);
+		this.accelerationInput.setAttribute('min', 0);
+		this.accelerationInput.setAttribute('value', 1024 / 2);
 
 		const clientIP = '192.168.0.37';
 		this.steeringClient = new WSClient(clientIP, '');
-		this.velocityClient = new WSClient(clientIP, '/velocity');
+		this.accelerationClient = new WSClient(clientIP, '/acceleration');
 		this.extrasClient = new WSClient(clientIP, '/extras');
 		this.extrasClient = new WSClient(clientIP, '/configure');
 
@@ -71,12 +71,12 @@ class Core {
 	
 	loop() {
 		setInterval(() => {
-			const val = parseInt(this.velocityInput.value);
+			const val = parseInt(this.accelerationInput.value);
 			if(this.input.inputs.ArrowDown) {
-				this.velocityInput.value = val - 100;
+				this.accelerationInput.value = val - 100;
 			}
 			if(this.input.inputs.ArrowUp) {
-				this.velocityInput.value = val + 100;
+				this.accelerationInput.value = val + 100;
 			}
 		}, this.interval);
 
