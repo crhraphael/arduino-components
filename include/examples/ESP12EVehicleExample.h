@@ -78,16 +78,16 @@ class ESP12EVehicleExample {
 	{ 
 		Serial.begin(DEFAULT_BAULD_RATE);
 
-		//this->defineServoDevices();
-		//this->definePotentiometerDevice();
+		this->defineServoDevices();
 
-		int PORT = 81;
+		const int PORT = 81;
 		this->esp12eImpl = new ESP8266WiFiImplementation(SSID, PASS, PORT);
 		this->esp12eComp = new ESP12ETranslator(this->esp12eImpl);
 
 		this->accelController = new AccelerationController(
 			this->servoVelComp, 			
-			this->esp12eComp);
+			this->esp12eComp,
+			10);
 
 		// this->steController = new SteeringController(			
 		// 	this->servoDirComp, 

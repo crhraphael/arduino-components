@@ -55,15 +55,11 @@ class ESP32LolinMotorExample {
 	IControllableComponent *servoDirComp;
 	IControllableComponent *servoVelComp;
 	
-	IWirelessCommComponent *esp12eComp;
 	IControllerComponent *potentiometerComponent;
 
 	IServoImplementation *servoDirImpl;
 	IServoImplementation *servoVelImpl;
 
-	IWirelessWiFiImplementation *esp12eImpl;
-
-	InputController *inputController;
 	SteeringController *steController;
 	AccelerationController *accelController;
 	
@@ -84,36 +80,21 @@ class ESP32LolinMotorExample {
 	{ 
 		Serial.begin(DEFAULT_BAULD_RATE);
 
-		//this->defineServoDevices();
-		//this->definePotentiometerDevice();
+		this->defineServoDevices();
+		this->definePotentiometerDevice();
 
-		int PORT = 81;
-		this->esp12eImpl = new ESP8266WiFiImplementation(SSID, PASS, PORT);
-		this->esp12eComp = new ESP12ETranslator(this->esp12eImpl);
-
-		// this->esp12eComp->listen();
 		this->accelController = new AccelerationController(
 			this->servoVelComp, 
-			this->esp12eComp);
+			this->potentiometerComponent);
 		// this->steController = new SteeringController(			
 		// 	this->servoDirComp, 
 		// 	this->potentiometerComponent);
 	} 
-	int i = 0;
+
 	void loop()
 	{ 
-		char a[] = "0";
-
-		itoa(i, a, 10);
-		i += 1;
 		//this->steController->update();
-		//this->accelController->update();
-
-		char b[] = "q";
-		this->esp12eComp->listen(b);
-		this->esp12eComp->send(a);
-
-
+		this->accelController->update();
 
 		//Serial.println((int)this->accelController->getCurrentAcceleration());
 	} 

@@ -26,14 +26,17 @@ class AccelerationController {
 	public:
 	AccelerationController(
 		IControllableComponent *controllableComponent,
-		IControllerComponent *controllerComponent
+		IControllerComponent *controllerComponent,
+		const int maxInputValue = 0
 	):
 	RIGHT(-1),
 	LEFT(1)
 	{
 		this->controllableComponent = controllableComponent;
 		this->controllerComponent = controllerComponent;
-		this->neutralPointValue = this->controllerComponent->MAX_VALUE / 2;
+		this->neutralPointValue = (maxInputValue != 0)
+			? maxInputValue / 2
+			: this->controllerComponent->MAX_VALUE / 2;
 	}
 
 	/**
@@ -44,7 +47,9 @@ class AccelerationController {
 		int potDiff = abs(this->neutralPointValue - potValue);
 
 		if(potValue > 0) {
-			capValue = (potDiff / (float)this->neutralPointValue);
+			capValue = this->neutralPointValue != 0 
+				? (potDiff / (float)this->neutralPointValue)
+				: 0;
 		}
 		return capValue;
 	}
