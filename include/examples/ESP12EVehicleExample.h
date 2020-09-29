@@ -1,5 +1,5 @@
-#ifndef ESP32LOLINMOTOREXAMPLE
-#define ESP32LOLINMOTOREXAMPLE
+#ifndef ESP12EVEHICLEEXAMPLE
+#define ESP12EVEHICLEEXAMPLE
 #include <Implementations/Servo/ServoImplementation.h>
 
 #include <Implementations/Wireless/WiFi/ESP8266WiFiImplementation.h>
@@ -51,19 +51,17 @@ const char END_MSG_BT = '.';
  * by interacting with it's driver without 
  * modifying the potentiometer axle.
  **/
-class ESP32LolinMotorExample {
+class ESP12EVehicleExample {
 	IControllableComponent *servoDirComp;
 	IControllableComponent *servoVelComp;
 	
 	IWirelessCommComponent *esp12eComp;
-	IControllerComponent *potentiometerComponent;
 
 	IServoImplementation *servoDirImpl;
 	IServoImplementation *servoVelImpl;
 
 	IWirelessWiFiImplementation *esp12eImpl;
 
-	InputController *inputController;
 	SteeringController *steController;
 	AccelerationController *accelController;
 	
@@ -73,10 +71,6 @@ class ESP32LolinMotorExample {
 
 		this->servoVelImpl = new ServoImplementation(SERVO_ACCELERATION_PIN);
 		this->servoVelComp = new MG90SCustomTranslator(this->servoVelImpl);
-	}
-
-	void definePotentiometerDevice() {
-		this->potentiometerComponent = new A50KPotentiometerTranslator(POT_PIN, 5.0f, 1024);
 	}
 
 	public:
@@ -91,10 +85,10 @@ class ESP32LolinMotorExample {
 		this->esp12eImpl = new ESP8266WiFiImplementation(SSID, PASS, PORT);
 		this->esp12eComp = new ESP12ETranslator(this->esp12eImpl);
 
-		// this->esp12eComp->listen();
 		this->accelController = new AccelerationController(
-			this->servoVelComp, 
+			this->servoVelComp, 			
 			this->esp12eComp);
+
 		// this->steController = new SteeringController(			
 		// 	this->servoDirComp, 
 		// 	this->potentiometerComponent);
@@ -102,19 +96,11 @@ class ESP32LolinMotorExample {
 	int i = 0;
 	void loop()
 	{ 
-		char a[] = "0";
-
-		itoa(i, a, 10);
-		i += 1;
-		//this->steController->update();
-		//this->accelController->update();
-
 		char b[] = "q";
 		this->esp12eComp->listen(b);
-		this->esp12eComp->send(a);
 
-
-
+		//this->steController->update();
+		this->accelController->update();
 		//Serial.println((int)this->accelController->getCurrentAcceleration());
 	} 
 };

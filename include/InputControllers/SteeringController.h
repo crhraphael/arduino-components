@@ -8,7 +8,7 @@
 #include <Arduino.h>
 
 /**
- * Tradutor de dados 
+ * Controlador de direção.
  **/
 class SteeringController {
 	private:

@@ -8,7 +8,7 @@
 #include <Arduino.h>
 
 /**
- * Tradutor de dados 
+ * Controlador de aceleração. 
  **/
 class AccelerationController {
 	private:
@@ -68,8 +68,8 @@ class AccelerationController {
 	}
 
 	void update() {
-		char buff[] = {'\0'};
-		char debug[] = {'\0'};
+		char buff[] = "\0";
+		char debug[] = "\0";
 
 		this->controllerComponent->read(buff);
 		if(strcmp(buff, debug) != 0) {

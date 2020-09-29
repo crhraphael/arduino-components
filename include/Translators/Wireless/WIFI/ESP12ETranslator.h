@@ -29,6 +29,10 @@ class ESP12ETranslator: public IArduinoComponent, public IWirelessCommComponent 
 	void listen(char *buff) {
 		this->rfImpl->listen();
 	}
+
+	void read(char *buff) {
+		this->rfImpl->listen();
+	}
 };
 
 #endif
