@@ -18,21 +18,24 @@ class SteeringController {
 	int neutralPointSensitivity = 10;
 	const int RIGHT;
 	const int LEFT;
-	float currentAcceleration = 0;
+	float currentPosition = 0;
 	int direction = -1;
-	int inputValue = 500;
+	int inputValue = 0;
 	
 	public:
 	SteeringController(
 		IControllableComponent *controllableComponent,
-		IControllerComponent *controllerComponent
+		IControllerComponent *controllerComponent,
+		const int maxInputValue = 0
 	):
 	RIGHT(-1),
 	LEFT(1)
 	{
 		this->controllableComponent = controllableComponent;
 		this->controllerComponent = controllerComponent;
-		this->neutralPointValue = this->controllerComponent->MAX_VALUE / 2;
+		this->neutralPointValue = (maxInputValue != 0)
+			? maxInputValue / 2
+			: this->controllerComponent->MAX_VALUE / 2;
 	}
 
 	/**
@@ -43,7 +46,9 @@ class SteeringController {
 		int potDiff = abs(this->neutralPointValue - potValue);
 
 		if(potValue > 0) {
-			capValue = (potDiff / (float)this->neutralPointValue);
+			capValue = this->neutralPointValue != 0 
+				? (potDiff / (float)this->neutralPointValue)
+				: 0;
 		}
 		return capValue;
 	}
@@ -66,9 +71,11 @@ class SteeringController {
 		return dir;
 	}
 	
+	int teste = 0;
+
 	void update() {
-		char buff[] = {'\0'};
-		char debug[] = {'\0'};
+		char buff[3] = "\0";
+		char debug[3] = "\0";
 
 		this->controllerComponent->read(buff);
 
@@ -76,23 +83,24 @@ class SteeringController {
 			this->inputValue = atoi(buff);
 		}
 
-		this->direction = this->getDirection(this->inputValue);
-		this->currentAcceleration = this->translateAcceleration(this->inputValue);
+		//this->direction = this->getDirection(this->inputValue);
+		this->currentPosition = this->inputValue;//this->translateAcceleration(this->inputValue);
 		
-		int mapVal = map(
-			this->inputValue, 
-			0, this->controllerComponent->MAX_VALUE, 
-			40, 180);
+		// int mapVal = map(
+		// 	this->inputValue, 
+		// 	0, this->controllerComponent->MAX_VALUE, 
+		// 	40, 180);
 		
-			Serial.print("Map: ");		
-			Serial.println(mapVal);
+			//Serial.print("Map: ");		
+			//Serial.println(mapVal);
 
-			this->controllableComponent->set(mapVal);
-
+			// this->controllableComponent->set(this->inputValue);
+			// if(this->teste > 2) this->teste = 0;
+			// else this->teste++;
 	}
 
 	float getCurrentAcceleration() {
-		return this->currentAcceleration;
+		return this->currentPosition;
 	}
 };
 

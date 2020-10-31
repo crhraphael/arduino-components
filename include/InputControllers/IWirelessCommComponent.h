@@ -8,6 +8,7 @@ class IWirelessCommComponent: public IControllerComponent {
 	public:
 	virtual ~IWirelessCommComponent() = 0;
 	virtual void listen(char *buff) = 0;
+	virtual void listen() = 0;
 	virtual void read(char *buff) = 0;
 	virtual void send(char *msg) = 0;
 };

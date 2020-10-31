@@ -27,14 +27,20 @@ class ESP8266WiFiImplementation: public IWirelessWiFiImplementation {
 	ESP8266WiFiClass wifiImpl;
 	WebSocketsServer webSocket;
 
+	int bufferLength = 10;
+
 	public:
+	char *buffer = '\0';
 	ESP8266WiFiImplementation(
 		char *ssid, 
 		char *password, 
-		const int websocketPort)
+		const int websocketPort,
+		int bufferLength = 10)
 	: 
 		webSocket(websocketPort) 
 	{
+		this->bufferLength = bufferLength;
+		this->buffer = new char[bufferLength]();
 
 		// int numberOfNetworks = this->wifiImpl.scanNetworks();
 
@@ -50,7 +56,7 @@ class ESP8266WiFiImplementation: public IWirelessWiFiImplementation {
 		this->wifiImpl.begin(ssid, password);
 		while (this->wifiImpl.status() != WL_CONNECTED) {
 			Serial.print(".");
-			Serial.print(this->wifiImpl.status());
+			// Serial.print(this->wifiImpl.status());
 			delay(100);
 		}
 		Serial.println(this->wifiImpl.localIP());
@@ -67,7 +73,12 @@ class ESP8266WiFiImplementation: public IWirelessWiFiImplementation {
 				std::placeholders::_4));
 	};
 
-	void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t lenght) {
+	void webSocketEvent(
+		uint8_t num, 
+		WStype_t type, 
+		uint8_t * payload, 
+		size_t lenght
+	) {
 		switch (type) {
 			case WStype_DISCONNECTED:
 				break;
@@ -79,6 +90,13 @@ class ESP8266WiFiImplementation: public IWirelessWiFiImplementation {
 				break;
 	
 			case WStype_TEXT:
+				{ 
+					if(lenght <= this->bufferLength) {
+						const char *text = (const char*)payload;
+						strcpy(this->buffer, text);
+						Serial.println(this->buffer);
+					}
+				}
 				break;
 	
 		}
