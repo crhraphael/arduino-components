@@ -12,11 +12,12 @@
 /**
  * Portas dos devices.
  */
-const int LED_PIN = 2;
+const int LED_PIN = LED_BUILTIN | 2;
 const int DEFAULT_BAULD_RATE = 9600;
 
 class ESP32LolinLEDExample {
 	CommonLED *led;
+	bool isHigh = false;
 
 	
 	public:
@@ -27,13 +28,12 @@ class ESP32LolinLEDExample {
 
 		
 	} 
-	 
+
 	void loop()
 	{ 
-		this->led->set(LOW);
-		delay(1000);
-		this->led->set(HIGH);
-		delay(2000);
+		uint8_t ledStatus = (this->isHigh) ? LOW : HIGH;
+		this->led->set(ledStatus);
+		this->isHigh = !this->isHigh;
 	} 
 };
 
