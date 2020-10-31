@@ -94,7 +94,6 @@ class ESP8266WiFiImplementation: public IWirelessWiFiImplementation {
 					if(lenght <= this->bufferLength) {
 						const char *text = (const char*)payload;
 						strcpy(this->buffer, text);
-						Serial.println(this->buffer);
 					}
 				}
 				break;
@@ -105,7 +104,11 @@ class ESP8266WiFiImplementation: public IWirelessWiFiImplementation {
 
 	void listen()
 	{
-		this->webSocket.loop();
+		this->webSocket. loop();
+	}
+
+	void readBuffer(char *buffer) {
+		strcpy(buffer, this->buffer);
 	}
 
 	void send(char *message)

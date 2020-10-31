@@ -32,7 +32,7 @@ class ESP12ETranslator: public IArduinoComponent, public IWirelessCommComponent 
 	}
 	
 	void read(char *buff) {
-		this->moduleImpl->listen();
+		this->moduleImpl->readBuffer(buff);
 	}
 };
 

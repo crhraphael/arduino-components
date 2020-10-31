@@ -81,6 +81,7 @@ class SteeringController {
 
 		if(strcmp(buff, debug) != 0) {
 			this->inputValue = atoi(buff);
+			Serial.print(buff);
 		}
 
 		//this->direction = this->getDirection(this->inputValue);
