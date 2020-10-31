@@ -15,7 +15,7 @@ class WSClient {
 	}
 	
 	send(data) {
-		// if(this.socket.OPEN) this.socket.send(data); 
+		if(this.socket.readyState == WebSocket.OPEN) this.socket.send(data); 
 	}
 
 	listen() {
@@ -54,16 +54,17 @@ class Core {
 
 	constructor() {
 		this.interval = 100;
+		this.lastVal = 0;
 		this.accelerationInput = document.querySelector('#acceleration-input');
 		this.accelerationInput.setAttribute('max', 1024);
 		this.accelerationInput.setAttribute('min', 0);
 		this.accelerationInput.setAttribute('value', 1024 / 2);
 
-		const clientIP = '192.168.0.37';
+		const clientIP = '192.168.0.38';
 		this.steeringClient = new WSClient(clientIP, '');
-		this.accelerationClient = new WSClient(clientIP, '/acceleration');
-		this.extrasClient = new WSClient(clientIP, '/extras');
-		this.extrasClient = new WSClient(clientIP, '/configure');
+		//this.accelerationClient = new WSClient(clientIP, '/acceleration');
+		//this.extrasClient = new WSClient(clientIP, '/extras');
+		//this.extrasClient = new WSClient(clientIP, '/configure');
 
 		this.input = new Input();		
 
@@ -73,16 +74,16 @@ class Core {
 		setInterval(() => {
 			const val = parseInt(this.accelerationInput.value);
 			if(this.input.inputs.ArrowDown) {
-				this.accelerationInput.value = val - 100;
+				this.accelerationInput.value = val;
 			}
 			if(this.input.inputs.ArrowUp) {
-				this.accelerationInput.value = val + 100;
+				this.accelerationInput.value = val;
 			}
-		}, this.interval);
 
-		setInterval(() => {
-			//this.steeringClient.send(this.steeringClient.value);
-			console.log('velClient: ' + this.steeringClient.message);
+			if(val != this.lastVal) {
+				this.lastVal = val;
+				this.steeringClient.send(val);
+			}
 		}, this.interval);
 	}
 }
