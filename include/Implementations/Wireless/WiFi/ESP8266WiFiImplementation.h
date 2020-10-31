@@ -24,6 +24,7 @@
  **/
 class ESP8266WiFiImplementation: public IWirelessWiFiImplementation {
 	private:
+	bool isListening = false;
 	ESP8266WiFiClass wifiImpl;
 	WebSocketsServer webSocket;
 
@@ -104,11 +105,17 @@ class ESP8266WiFiImplementation: public IWirelessWiFiImplementation {
 
 	void listen()
 	{
-		this->webSocket. loop();
+		this->webSocket.loop();
+		this->isListening = true;
 	}
 
 	void readBuffer(char *buffer) {
-		strcpy(buffer, this->buffer);
+		if(!this->isListening) {
+			strcpy(buffer, "listen method not called");
+
+		} else {
+			strcpy(buffer, this->buffer);
+		}
 	}
 
 	void send(char *message)

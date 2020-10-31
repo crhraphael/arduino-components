@@ -1,23 +1,32 @@
 #ifndef ESP12EVEHICLEEXAMPLE
 #define ESP12EVEHICLEEXAMPLE
-#include <Implementations/Servo/ServoImplementation.h>
 
+#include <Arduino.h>
+#include <Config/WIFICredentials.h>
+
+#include <Implementations/Servo/ServoImplementation.h>
 #include <Implementations/Wireless/WiFi/ESP8266WiFiImplementation.h>
 
 #include <Translators/Servo/MG90S-DriverOnly/MG90SCustomTranslator.h>
 #include <Translators/Servo/GS1502/GS1502Translator.h>
+
 #include <Translators/Potentiometer/A50K/A50KPotentiometerTranslator.h>
+
 #include <Translators/LEDs/CommonLED.h>
+
 #include <Translators/Wireless/WIFI/ESP12ETranslator.h>
+
 #include <Translators/Debug/DebuggerTranslator.h>
 
 #include <InputControllers/InputController.h>
 #include <InputControllers/AccelerationController.h>
 #include <InputControllers/SteeringController.h>
 
-#include <Config/WIFICredentials.h>
 
-#include <Arduino.h>
+
+#ifndef WIFICREDENTIALS
+#error "This example must include the Config/WIFICredentials.h"
+#endif
 
 
 // Label	GPIO	  Input						Output	Notes
@@ -99,7 +108,7 @@ class ESP12EVehicleExample {
 			this->servoDirComp, 
 			this->esp12eComp);
 	} 
-	int i = 0;
+	
 	void loop()
 	{ 
 		this->esp12eComp->listen();
