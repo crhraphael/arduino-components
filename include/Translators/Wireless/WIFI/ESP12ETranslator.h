@@ -11,27 +11,28 @@
  */
 class ESP12ETranslator: public IArduinoComponent, public IWirelessCommComponent {
 	private:
-  IWirelessWiFiImplementation* rfImpl;
+  IWirelessWiFiImplementation* moduleImpl;
 	public:
 	ESP12ETranslator(
-		IWirelessWiFiImplementation *rfImpl
+		IWirelessWiFiImplementation *moduleImpl
 	):
 		IWirelessCommComponent()
 	{
-		this->rfImpl = rfImpl;
+		this->moduleImpl = moduleImpl;
 	};
 
 	void send (char *message)
 	{
-		this->rfImpl->send(message);
+		this->moduleImpl->send(message);
 	}
 
-	void listen(char *buff) {
-		this->rfImpl->listen();
+	void listen(char *buff) {}
+	void listen() {
+		this->moduleImpl->listen();
 	}
-
+	
 	void read(char *buff) {
-		this->rfImpl->listen();
+		this->moduleImpl->listen();
 	}
 };
 
