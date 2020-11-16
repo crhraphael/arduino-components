@@ -15,7 +15,7 @@ class AccelerationController {
 	IControllableComponent *controllableComponent;
 	IControllerComponent *controllerComponent;
   int neutralPointValue = 0;
-	int neutralPointSensitivity = 10;
+	int neutralPointSensitivity = 5;
 	const int RIGHT;
 	const int LEFT;
 	float currentAcceleration = 0;
@@ -26,17 +26,14 @@ class AccelerationController {
 	public:
 	AccelerationController(
 		IControllableComponent *controllableComponent,
-		IControllerComponent *controllerComponent,
-		const int maxInputValue = 0
+		IControllerComponent *controllerComponent
 	):
 	RIGHT(-1),
 	LEFT(1)
 	{
 		this->controllableComponent = controllableComponent;
 		this->controllerComponent = controllerComponent;
-		this->neutralPointValue = (maxInputValue != 0)
-			? maxInputValue / 2
-			: this->controllerComponent->MAX_VALUE / 2;
+		this->neutralPointValue = this->controllableComponent->SERVO_STOPPED_VALUE;
 	}
 
 	/**
@@ -79,8 +76,6 @@ class AccelerationController {
 		this->controllerComponent->read(buff);
 		if(strcmp(buff, debug) != 0) {
 			this->inputValue = atoi(buff);
-		 	Serial.print("Char: ");
-			Serial.println(atoi(buff));
 		}
 
 		this->reverse = this->getDirection(this->inputValue);

@@ -82,14 +82,13 @@ class ESP8266WiFiImplementation: public IWirelessWiFiImplementation {
 	) {
 		switch (type) {
 			case WStype_DISCONNECTED:
-				break;
-	
+				break;	
 			case WStype_CONNECTED:
-				{ IPAddress ip = this->webSocket.remoteIP(num);
+				{ 
+					IPAddress ip = this->webSocket.remoteIP(num);
 					Serial.println(ip);
 				}
-				break;
-	
+				break;	
 			case WStype_TEXT:
 				{ 
 					if(lenght <= this->bufferLength) {
@@ -110,12 +109,10 @@ class ESP8266WiFiImplementation: public IWirelessWiFiImplementation {
 	}
 
 	void readBuffer(char *buffer) {
-		if(!this->isListening) {
-			strcpy(buffer, "listen method not called");
-
-		} else {
-			strcpy(buffer, this->buffer);
-		}
+		const char *msg = (!this->isListening)
+			? "error: class is not listening. Did you called listen?"
+			: this->buffer;
+		strcpy(buffer, msg);
 	}
 
 	void send(char *message)
@@ -123,10 +120,21 @@ class ESP8266WiFiImplementation: public IWirelessWiFiImplementation {
 		this->webSocket.sendTXT(0, message);
 	}
 };
- 
 
- 
-// Tratamento de eventos dos dados que vêm do cliente 
 
- 
+typedef enum {
+	ACCELERATION = 0,
+	STEERING = 1,
+	CONFIG = 2
+} PayloadProtocolType;
+
+class PayloadProtocol {
+	public:
+	PayloadProtocolType type = PayloadProtocolType::ACCELERATION;
+
+	PayloadProtocol() {
+
+	}
+};
+
 #endif

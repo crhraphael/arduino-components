@@ -19,9 +19,10 @@ class MG90SCustomTranslator: public IArduinoComponent, public IControllableCompo
 	IServoImplementation* servoImpl;
 
 	public:
-	MG90SCustomTranslator(IServoImplementation* servoImpl): 
-		MAX_ACCELERATION(10), 
-		SERVO_STOPPED_VALUE(135)
+	MG90SCustomTranslator(IServoImplementation* servoImpl, int maxIncrement, int neutralValue)
+	: 
+		MAX_ACCELERATION(maxIncrement), 
+		SERVO_STOPPED_VALUE(neutralValue)
 	{
 		this->servoImpl = servoImpl;
 	};
@@ -42,7 +43,7 @@ class MG90SCustomTranslator: public IArduinoComponent, public IControllableCompo
 	}
   void set(float vel) {
 		int value = this->translate(vel);
-		this->servoImpl->send(value);
+		this->servoImpl->sendMicroseconds(value);
 	}
 };
 

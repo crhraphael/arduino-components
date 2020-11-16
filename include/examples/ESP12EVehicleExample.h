@@ -82,12 +82,12 @@ class ESP12EVehicleExample {
 		this->servoDirComp = new GS1502Translator(this->servoDirImpl);
 
 		this->servoVelImpl = new ServoImplementation(SERVO_ACCELERATION_PIN);
-		this->servoVelComp = new MG90SCustomTranslator(this->servoVelImpl);
+		this->servoVelComp = new MG90SCustomTranslator(this->servoVelImpl, 120, 1450);
 	}
 
 	void defineWiFIModule() {
 		const int WEBSOCKET_PORT = 81;
-		this->esp12eImpl = new ESP8266WiFiImplementation(SSID, PASS, WEBSOCKET_PORT);
+		this->esp12eImpl = new ESP8266WiFiImplementation(MY_SSID, MY_PASS, WEBSOCKET_PORT);
 		this->esp12eComp = new ESP12ETranslator(this->esp12eImpl);
 	}
 
@@ -99,10 +99,9 @@ class ESP12EVehicleExample {
 		this->defineServoDevices();
 		this->defineWiFIModule();
 
-		// this->accelController = new AccelerationController(
-		// 	this->servoVelComp, 			
-		// 	this->esp12eComp,
-		// 	10);
+		this->accelController = new AccelerationController(
+			this->servoVelComp, 			
+			this->esp12eComp);
 
 		this->steController = new SteeringController(			
 			this->servoDirComp, 
@@ -113,7 +112,7 @@ class ESP12EVehicleExample {
 	{ 
 		this->esp12eComp->listen();
 
-		//this->accelController->update();
+		this->accelController->update();
 		//Serial.println((int)this->accelController->getCurrentAcceleration());
 
 		this->steController->update();

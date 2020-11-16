@@ -19,7 +19,11 @@ class ServoImplementation: public IServoImplementation, public Servo {
 		this->servo.attach(pin);
 	};
 
-  void send(int value) {
+  void sendMicroseconds(int value) {
+		this->servo.writeMicroseconds(value);
+	}
+
+	void send(int value) {
 		this->servo.write(value);
 	}
 };
