@@ -6,9 +6,9 @@ class IControllableComponent {
 	public:
   virtual void set(float vel) = 0;
 
-	const int MAX_ACCELERATION; 
+	int MAX_ACCELERATION; 
 
-	const int SERVO_STOPPED_VALUE;
+	int SERVO_STOPPED_VALUE;
 };
 
 #endif

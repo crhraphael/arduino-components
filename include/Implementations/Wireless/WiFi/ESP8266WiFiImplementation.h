@@ -28,15 +28,15 @@ class ESP8266WiFiImplementation: public IWirelessWiFiImplementation {
 	ESP8266WiFiClass wifiImpl;
 	WebSocketsServer webSocket;
 
-	int bufferLength = 10;
+	unsigned int bufferLength = 10;
 
 	public:
 	char *buffer = '\0';
 	ESP8266WiFiImplementation(
-		char *ssid, 
-		char *password, 
+		const char *ssid, 
+		const char *password, 
 		const int websocketPort,
-		int bufferLength = 10)
+		unsigned int bufferLength = 10)
 	: 
 		webSocket(websocketPort) 
 	{
@@ -97,7 +97,18 @@ class ESP8266WiFiImplementation: public IWirelessWiFiImplementation {
 					}
 				}
 				break;
-	
+			case WStype_ERROR:
+			case WStype_FRAGMENT:
+			case WStype_BIN:
+			case WStype_FRAGMENT_TEXT_START:
+			case WStype_FRAGMENT_BIN_START:
+			case WStype_FRAGMENT_FIN:
+			case WStype_PING:
+			case WStype_PONG:
+				{
+
+				}
+				break;
 		}
 	
 	}
