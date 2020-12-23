@@ -5,6 +5,9 @@
 #include <Translators/Potentiometer/IPotentiometerInputTranslator.h>
 #include <InputControllers/IControllableComponent.h>
 #include <InputControllers/IControllerComponent.h>
+
+#include <Helpers/BasicPayloadProtocol.h>
+
 #include <Arduino.h>
 
 /**
@@ -20,7 +23,7 @@ class AccelerationController {
 	const int LEFT;
 	float currentAcceleration = 0;
 	int reverse = -1;
-	int inputValue = 500;
+	float inputValue = 0.0f;
 
 	
 	public:
@@ -33,54 +36,83 @@ class AccelerationController {
 	{
 		this->controllableComponent = controllableComponent;
 		this->controllerComponent = controllerComponent;
-		this->neutralPointValue = this->controllableComponent->SERVO_STOPPED_VALUE;
+		this->neutralPointValue = this->controllableComponent->getServoNeutralValue();
 	}
 
 	/**
 	 * Retorna a velocidade do motor. 
 	 */
-	float translateAcceleration(int potValue) {
-		float capValue = 1;
-		int potDiff = abs(this->neutralPointValue - potValue);
+	void translateAcceleration() {
+		int potDiff = abs(this->neutralPointValue - this->inputValue);
 
-		if(potValue > 0) {
-			capValue = this->neutralPointValue != 0 
-				? (potDiff / (float)this->neutralPointValue)
-				: 0;
-		}
-		return capValue;
+		float capValue = this->neutralPointValue != 0 
+			? ((float)potDiff / (float)this->controllableComponent->getMaxAcceleration())
+			: 0;
+		// Serial.print("neutralPointValue");
+		// Serial.println(this->neutralPointValue);		
+		// Serial.print("inputValue");
+		// Serial.println(this->inputValue);
+		// Serial.print("potDiff");
+		// Serial.println(potDiff);
+		// Serial.print("capValue");
+		// Serial.println(capValue);
+		// Serial.print("getMaxAcceleration");
+		// Serial.println(this->controllableComponent->getMaxAcceleration());
+		
+		this->currentAcceleration = capValue;
 	}
 
 	/**
 	 * Retorna a direcao do motor. 
 	 */
-	int getDirection(int potValue) {
+	void configureDirection() {
 		int neutralPotVal = this->neutralPointValue;
 		
 		int rightVal = neutralPotVal + this->neutralPointSensitivity;
 		int leftVal = neutralPotVal - this->neutralPointSensitivity;
 		
-		int dir = (potValue > rightVal)
+		int dir = (this->inputValue > rightVal)
 			? this->RIGHT
-			: (potValue < leftVal) 
+			: (this->inputValue < leftVal) 
 				? this->LEFT
 				: 0;
 
-		return dir;
+		this->reverse = dir;
 	}
 
 	void update() {
-		char buff[] = "\0";
-		char debug[] = "\0";
+		char buff[10] = "\0";
+		char debug[10] = "\0";
 
 		this->controllerComponent->read(buff);
 		if(strcmp(buff, debug) != 0) {
-			this->inputValue = atoi(buff);
+			const char flag = char(buff[0]);
+
+
+			if(flag == 'a') {
+				const int lenght = strlen(buff);
+				char target[10] = "\0";
+				getSubString(buff, target, 2, lenght);
+				const float value = atoi(target);
+
+				this->inputValue = value;
+
+			}
+
 		}
 
-		this->reverse = this->getDirection(this->inputValue);
-		this->currentAcceleration = this->translateAcceleration(this->inputValue);
-		this->controllableComponent->set(this->reverse * this->currentAcceleration);
+		// this->configureDirection();
+		// this->translateAcceleration();
+		// Serial.print("reverse");
+		// Serial.println(this->reverse);
+		// Serial.print("currentAcceleration");
+		// Serial.println(this->currentAcceleration);
+		// Serial.print("*");
+		// Serial.println(this->reverse * this->currentAcceleration);
+		int i = 1000;
+		for(i = 1000; i< 2000; i++) {
+			this->controllableComponent->set(i);
+		}
 	}
 
 	float getCurrentAcceleration() {

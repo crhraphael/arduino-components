@@ -6,9 +6,9 @@ class IControllableComponent {
 	public:
   virtual void set(float vel) = 0;
 
-	int MAX_ACCELERATION; 
+	virtual int getMaxAcceleration() = 0; 
 
-	int SERVO_STOPPED_VALUE;
+	virtual int getServoNeutralValue() = 0;
 };
 
 #endif

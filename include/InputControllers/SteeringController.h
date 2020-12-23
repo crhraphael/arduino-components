@@ -5,6 +5,9 @@
 #include <Translators/Potentiometer/IPotentiometerInputTranslator.h>
 #include <InputControllers/IControllableComponent.h>
 #include <InputControllers/IControllerComponent.h>
+
+#include <Helpers/BasicPayloadProtocol.h>
+
 #include <Arduino.h>
 
 /**
@@ -15,7 +18,7 @@ class SteeringController {
 	IControllableComponent *controllableComponent;
 	IControllerComponent *controllerComponent;
   int neutralPointValue = 0;
-	int neutralPointSensitivity = 10;
+	int neutralPointSensitivity = 1;
 	const int RIGHT;
 	const int LEFT;
 	float currentPosition = 0;
@@ -25,32 +28,14 @@ class SteeringController {
 	public:
 	SteeringController(
 		IControllableComponent *controllableComponent,
-		IControllerComponent *controllerComponent,
-		const int maxInputValue = 0
+		IControllerComponent *controllerComponent
 	):
 	RIGHT(-1),
 	LEFT(1)
 	{
 		this->controllableComponent = controllableComponent;
 		this->controllerComponent = controllerComponent;
-		this->neutralPointValue = (maxInputValue != 0)
-			? maxInputValue / 2
-			: this->controllerComponent->MAX_VALUE / 2;
-	}
-
-	/**
-	 * Retorna a velocidade do motor. 
-	 */
-	float translateAcceleration(int potValue) {
-		float capValue = 1;
-		int potDiff = abs(this->neutralPointValue - potValue);
-
-		if(potValue > 0) {
-			capValue = this->neutralPointValue != 0 
-				? (potDiff / (float)this->neutralPointValue)
-				: 0;
-		}
-		return capValue;
+		this->neutralPointValue = this->controllableComponent->getServoNeutralValue();
 	}
 
 	/**
@@ -70,38 +55,29 @@ class SteeringController {
 
 		return dir;
 	}
-	
-	int teste = 0;
 
 	void update() {
-		char buff[3] = "\0";
-		char debug[3] = "\0";
+		char buff[10] = "\0";
+		char debug[10] = "\0";
 
 		this->controllerComponent->read(buff);
 
 		if(strcmp(buff, debug) != 0) {
-			this->inputValue = atoi(buff);
-			Serial.println(buff);
+			const char directionFlag = 'd';
+			if(strcmp(&buff[0], &directionFlag) == 0) {
+				const int lenght = strlen(buff);
+				char *target = "\0";
+				getSubString(buff, target, 2, lenght);
+				const int value = atoi(target);
+
+				this->inputValue = value;
+			}
 		}
 
 		//this->direction = this->getDirection(this->inputValue);
-		this->currentPosition = this->inputValue;//this->translateAcceleration(this->inputValue);
-		
-		// int mapVal = map(
-		// 	this->inputValue, 
-		// 	0, this->controllerComponent->MAX_VALUE, 
-		// 	40, 180);
-		
-			//Serial.print("Map: ");		
-			//Serial.println(mapVal);
+		this->currentPosition = this->inputValue;
+		this->controllableComponent->set(this->inputValue);
 
-			// this->controllableComponent->set(this->inputValue);
-			// if(this->teste > 2) this->teste = 0;
-			// else this->teste++;
-	}
-
-	float getCurrentAcceleration() {
-		return this->currentPosition;
 	}
 };
 

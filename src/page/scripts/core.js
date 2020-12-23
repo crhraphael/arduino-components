@@ -56,12 +56,13 @@ class Core {
 		this.interval = 100;
 		this.lastVal = 0;
 		this.accelerationInput = document.querySelector('#acceleration-input');
-		this.accelerationInput.setAttribute('max', 1024);
-		this.accelerationInput.setAttribute('min', 0);
-		this.accelerationInput.setAttribute('value', 1024 / 2);
+		this.accelerationInput.setAttribute('max', 1);
+		this.accelerationInput.setAttribute('min', -1);
+		this.accelerationInput.setAttribute('step', '0.1');
+		this.accelerationInput.setAttribute('value', 0);
 
 		const clientIP = '192.168.0.38';
-		this.steeringClient = new WSClient(clientIP, '');
+		this.client = new WSClient(clientIP, '');
 		//this.accelerationClient = new WSClient(clientIP, '/acceleration');
 		//this.extrasClient = new WSClient(clientIP, '/extras');
 		//this.extrasClient = new WSClient(clientIP, '/configure');
@@ -82,7 +83,7 @@ class Core {
 
 			if(val != this.lastVal) {
 				this.lastVal = val;
-				this.steeringClient.send(val);
+				this.client.send("a:" + val);
 			}
 		}, this.interval);
 	}

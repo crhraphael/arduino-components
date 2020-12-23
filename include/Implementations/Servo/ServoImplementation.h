@@ -8,7 +8,7 @@
 /**
  * 
  */
-class ServoImplementation: public IServoImplementation, public Servo {
+class ServoImplementation: public IServoImplementation {
 	private:
 	Servo servo;
 

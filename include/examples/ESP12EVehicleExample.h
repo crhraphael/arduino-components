@@ -79,7 +79,9 @@ class ESP12EVehicleExample {
 	
 	void defineServoDevices() {
 		this->servoDirImpl = new ServoImplementation(SERVO_DIRECTION_PIN);
-		this->servoDirComp = new GS1502Translator(this->servoDirImpl);
+		const int maxIncrement = 50;
+		const int maxVelocity = 50;
+		this->servoDirComp = new GS1502Translator(this->servoDirImpl, maxIncrement, maxVelocity);
 
 		this->servoVelImpl = new ServoImplementation(SERVO_ACCELERATION_PIN);
 		this->servoVelComp = new MG90SCustomTranslator(this->servoVelImpl, 120, 1450);
