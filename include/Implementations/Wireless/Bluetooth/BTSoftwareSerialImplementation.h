@@ -1,3 +1,4 @@
+#ifdef _SS_MAX_RX_BUFF
 #ifndef BTSOFTWARESERIALIMPLEMENTATION
 #define BTSOFTWARESERIALIMPLEMENTATION
 
@@ -66,4 +67,5 @@ class BTSoftwareSerialImplementation: public IBluetoothImplementation {
 	}
 };
 
+#endif
 #endif

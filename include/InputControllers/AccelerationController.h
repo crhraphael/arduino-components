@@ -1,5 +1,5 @@
-#ifndef STEERINGCONTROLLER
-#define STEERINGCONTROLLER
+#ifndef ACCELERATIONCONTROLLER
+#define ACCELERATIONCONTROLLER
 
 #include <Helpers/IInputParser.h>
 #include <Translators/Servo/MG90S-DriverOnly/MG90SCustomTranslator.h>
@@ -12,23 +12,26 @@
 #include <Arduino.h>
 
 /**
- * Controlador de direção.
+ * Controlador de aceleração. 
  **/
-class SteeringController {
+class AccelerationController {
 	private:
 	IControllableComponent *controllableComponent;
 	IControllerComponent *controllerComponent;
 	IInputParser *inputParser;
+
   int neutralPointValue = 0;
-	int neutralPointSensitivity = 1;
+	int neutralPointSensitivity = 5;
 	const int RIGHT;
 	const int LEFT;
-	float currentPosition = 0;
-	int direction = -1;
+	float currentAcceleration = 0;
+	int reverse = -1;
 	float inputValue = 0.0f;
+
+
 	
 	public:
-	SteeringController(
+	AccelerationController(
 		IControllableComponent *controllableComponent,
 		IControllerComponent *controllerComponent,
 		IInputParser *inputParser
@@ -45,19 +48,19 @@ class SteeringController {
 	/**
 	 * Retorna a direcao do motor. 
 	 */
-	int getDirection(int potValue) {
+	void configureDirection() {
 		int neutralPotVal = this->neutralPointValue;
 		
 		int rightVal = neutralPotVal + this->neutralPointSensitivity;
 		int leftVal = neutralPotVal - this->neutralPointSensitivity;
 		
-		int dir = (potValue > rightVal)
+		int dir = (this->inputValue > rightVal)
 			? this->RIGHT
-			: (potValue < leftVal) 
+			: (this->inputValue < leftVal) 
 				? this->LEFT
 				: 0;
 
-		return dir;
+		this->reverse = dir;
 	}
 
 	void update() {
@@ -65,12 +68,27 @@ class SteeringController {
 		char debug[10] = "\0";
 
 		this->controllerComponent->read(buff);
-		this->inputParser->parse(buff, this->inputValue, 's');
+		this->inputParser->parse(buff, this->inputValue, 'a');
+		Serial.println(this->inputValue);
 
-		//this->direction = this->getDirection(this->inputValue);
-		this->currentPosition = this->inputValue;
-		this->controllableComponent->set(this->inputValue);
+		//this->controllableComponent->set(this->inputValue);
 
+		// this->configureDirection();
+		// this->translateAcceleration();
+		// Serial.print("reverse");
+		// Serial.println(this->reverse);
+		// Serial.print("currentAcceleration");
+		// Serial.println(this->currentAcceleration);
+		// Serial.print("*");
+		// Serial.println(this->reverse * this->currentAcceleration);
+		// int i = 1000;
+		// for(i = 1000; i< 2000; i++) {
+		// 	this->controllableComponent->set(i);
+		// }
+	}
+
+	float getCurrentAcceleration() {
+		return this->currentAcceleration;
 	}
 };
 

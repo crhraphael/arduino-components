@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>WiFI Controller</title>
+		<script type="text/javascript" src="scripts/core.js"></script>
+		<style type="text/css">
+			.slider-wrapper {
+				display: inline-block;
+				width: 20px;
+				height: 150px;
+				padding: 0;
+			}
+			.slider-wrapper input {
+				width: 150px;
+				height: 20px;
+				margin: 0;
+				transform-origin: 75px 75px;
+				transform: rotate(-90deg);
+			}
+			.controller {
+				background-color: bisque;
+				width: 90%;
+				height: 30%;
+				position: relative;
+			}
+			.controller .left {
+				background-color: burlywood;
+				float:left;
+			}
+			.controller .right {
+				background-color: coral;
+				float:right;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="controller">
+			<form>
+				<div class="left">
+					<input type="button" min="0" max="1024" value="&lt;"></input>
+					<input type="button" min="0" max="1024" value="&gt;"></input>				
+				</div>
+				<div class="right">
+					<div class="slider-wrapper">
+						<input id="acceleration-input" type="range" min="1320" max="1570">
+					</div>
+				</div>
+			</form>
+		</div>
+	</body>
+</html>

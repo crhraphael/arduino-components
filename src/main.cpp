@@ -1,17 +1,19 @@
-#include <examples/MotorBluetoothExample.h>
+// #include <examples/ESP12EVehicleExample.h>
+// #include <examples/ESP32LolinLEDExample.h>
+#include <examples/NonClassExample.h>
 
-MotorBluetoothExample* impl = new MotorBluetoothExample();
-
-const int LED = 6;
+NonClassExample* impl;
+// ESP32LolinLEDExample* implLED = new ESP32LolinLEDExample();
 
 void setup() 
 { 
-  // pinMode(LED, OUTPUT);
-  // digitalWrite(LED, LOW);
+	impl = new NonClassExample();
   impl->setup();
-} 
+  // implLED->setup();
+}  
  
 void loop()
 { 
   impl->loop();
+  // implLED->loop();
 } 

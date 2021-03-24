@@ -1,14 +1,14 @@
 #ifndef SERVOIMPLEMENTATION
 #define SERVOIMPLEMENTATION
 
-#include <Translators/Servo/IServoInputTranslator.h>
 #include <Implementations/Servo/IServoImplementation.h>
 #include <Servo.h>
+#include <Arduino.h>
 
 /**
  * 
  */
-class ServoImplementation: public IServoImplementation, public Servo {
+class ServoImplementation: public IServoImplementation {
 	private:
 	Servo servo;
 
@@ -19,7 +19,11 @@ class ServoImplementation: public IServoImplementation, public Servo {
 		this->servo.attach(pin);
 	};
 
-  void send(int value) {
+  void sendMicroseconds(int value) {
+		this->servo.writeMicroseconds(value);
+	}
+
+	void send(int value) {
 		this->servo.write(value);
 	}
 };

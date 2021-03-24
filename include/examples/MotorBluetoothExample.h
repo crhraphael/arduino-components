@@ -9,7 +9,7 @@
 #include <Translators/LEDs/CommonLED.h>
 
 #include <InputControllers/InputController.h>
-#include <InputControllers/VelocityController.h>
+#include <InputControllers/AccelerationController.h>
 #include <InputControllers/SteeringController.h>
 
 #include <Arduino.h>
@@ -29,6 +29,12 @@ const int DEFAULT_BAULD_RATE = 9600;
 const char END_MSG_BT = '.';
 
 
+/**
+ * Experiment using an Arduino UNO as prototype board
+ * 
+ * It controls the velocity and direction of a DC Motor 
+ * by interacting with it's driver directly.
+ **/
 class MotorBluetoothExample {
 	IControllableComponent *servoComponent;
 
@@ -56,7 +62,7 @@ class MotorBluetoothExample {
 
 	InputController *inputController;
 	SteeringController *steController;
-	VelocityController *velController;
+	AccelerationController *accelController;
 
 	RearLightsController *rearLightsController;
 	BrakeLightsController *brakeLightController;
@@ -101,7 +107,7 @@ class MotorBluetoothExample {
 		this->defineBluetoothDevice();
 		// this->defineLEDDevices();
 		
-		this->velController = new VelocityController(
+		this->accelController = new AccelerationController(
 			this->servoComponent, 
 			this->bluetoothComponent);
 		this->steController = new SteeringController();
@@ -114,7 +120,7 @@ class MotorBluetoothExample {
 
 		// this->inputController = new InputController(
 		// 	this->steController, 
-		// 	this->velController,
+		// 	this->accelController,
 		// 	this->headLightController,
 		// 	this->turnLightController,
 		// 	this->brakeLightController,
@@ -123,8 +129,8 @@ class MotorBluetoothExample {
 	 
 	void loop()
 	{ 
-		this->velController->update();
-		///Serial.println((int)this->velController->getCurrentVelocity());
+		this->accelController->update();
+		///Serial.println((int)this->accelController->getCurrentAcceleration());
 	} 
 };
 

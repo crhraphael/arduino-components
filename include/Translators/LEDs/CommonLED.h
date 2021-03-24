@@ -16,8 +16,14 @@ class CommonLED: public IArduinoComponent, public IControllableComponent {
 		pinMode(pin, OUTPUT);
 	}
 
-  void set(float vel) {
-		analogWrite(this->pin, (int)vel);
+	// TODO: Criar abstração de motor controlável para estes valores.
+	int getMaxAcceleration() { return 0; }; 
+	
+	// TODO: Criar abstração de motor controlável para estes valores.
+	int getServoNeutralValue() { return 0; }; 
+
+  void set(float val) {
+		digitalWrite(this->pin, (int)val);
 	}
 };
 
