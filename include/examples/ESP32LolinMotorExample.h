@@ -64,11 +64,11 @@ class ESP32LolinMotorExample {
 	AccelerationController *accelController;
 	
 	void defineServoDevices() {
-		this->servoDirImpl = new ServoImplementation(SERVO_DIRECTION_PIN);
-		this->servoDirComp = new MG90SCustomTranslator(this->servoDirImpl);
+		// this->servoDirImpl = new ServoImplementation(SERVO_DIRECTION_PIN);
+		// this->servoDirComp = new MG90SCustomTranslator(this->servoDirImpl);
 
-		this->servoVelImpl = new ServoImplementation(SERVO_ACCELERATION_PIN);
-		this->servoVelComp = new MG90SCustomTranslator(this->servoVelImpl);
+		// this->servoVelImpl = new ServoImplementation(SERVO_ACCELERATION_PIN);
+		// this->servoVelComp = new MG90SCustomTranslator(this->servoVelImpl);
 	}
 
 	void definePotentiometerDevice() {

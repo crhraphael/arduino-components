@@ -61,7 +61,7 @@ class Core {
 		this.accelerationInput.setAttribute('step', '0.1');
 		this.accelerationInput.setAttribute('value', 0);
 
-		const clientIP = '192.168.0.38';
+		const clientIP = '192.168.0.37';
 		this.client = new WSClient(clientIP, '');
 		//this.accelerationClient = new WSClient(clientIP, '/acceleration');
 		//this.extrasClient = new WSClient(clientIP, '/extras');
@@ -73,7 +73,7 @@ class Core {
 	
 	loop() {
 		setInterval(() => {
-			const val = parseInt(this.accelerationInput.value);
+			const val = (this.accelerationInput.value);
 			if(this.input.inputs.ArrowDown) {
 				this.accelerationInput.value = val;
 			}

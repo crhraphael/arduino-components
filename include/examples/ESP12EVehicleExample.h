@@ -22,6 +22,7 @@
 #include <InputControllers/AccelerationController.h>
 #include <InputControllers/SteeringController.h>
 
+#include <Helpers/CharIdFloatInputParser.h>
 
 
 #ifndef WIFICREDENTIALS
@@ -64,6 +65,9 @@ const int DEFAULT_BAULD_RATE = 9600;
 class ESP12EVehicleExample {
 	IControllableComponent *servoDirComp;
 	IControllableComponent *servoVelComp;
+
+	IInputParser *accelerationParser;
+	IInputParser *directionParser;
 	
 	IWirelessCommComponent *esp12eComp;
 
@@ -84,7 +88,12 @@ class ESP12EVehicleExample {
 		this->servoDirComp = new GS1502Translator(this->servoDirImpl, maxIncrement, maxVelocity);
 
 		this->servoVelImpl = new ServoImplementation(SERVO_ACCELERATION_PIN);
-		this->servoVelComp = new MG90SCustomTranslator(this->servoVelImpl, 120, 1450);
+		this->servoVelComp = new MG90SCustomTranslator(this->servoVelImpl, 13, 87);
+	}
+
+	void defineInputParsers() {
+		this->accelerationParser = new CharIdFloatInputParser();
+		this->directionParser = new CharIdFloatInputParser();
 	}
 
 	void defineWiFIModule() {
@@ -93,21 +102,28 @@ class ESP12EVehicleExample {
 		this->esp12eComp = new ESP12ETranslator(this->esp12eImpl);
 	}
 
+	void defineControllers(){
+		this->accelController = new AccelerationController(
+			this->servoVelComp, 			
+			this->esp12eComp,
+			this->accelerationParser);
+
+		this->steController = new SteeringController(			
+			this->servoDirComp, 
+			this->esp12eComp,
+			this->directionParser);
+	}
+
 	public:
 	void setup() 
 	{ 
 		Serial.begin(DEFAULT_BAULD_RATE);
 
 		this->defineServoDevices();
+		this->defineInputParsers();
 		this->defineWiFIModule();
+		this->defineControllers();
 
-		this->accelController = new AccelerationController(
-			this->servoVelComp, 			
-			this->esp12eComp);
-
-		this->steController = new SteeringController(			
-			this->servoDirComp, 
-			this->esp12eComp);
 	} 
 	
 	void loop()

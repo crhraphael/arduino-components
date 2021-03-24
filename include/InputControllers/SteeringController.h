@@ -1,6 +1,7 @@
 #ifndef STEERINGCONTROLLER
 #define STEERINGCONTROLLER
 
+#include <Helpers/IInputParser.h>
 #include <Translators/Servo/MG90S-DriverOnly/MG90SCustomTranslator.h>
 #include <Translators/Potentiometer/IPotentiometerInputTranslator.h>
 #include <InputControllers/IControllableComponent.h>
@@ -17,18 +18,20 @@ class SteeringController {
 	private:
 	IControllableComponent *controllableComponent;
 	IControllerComponent *controllerComponent;
+	IInputParser *inputParser;
   int neutralPointValue = 0;
 	int neutralPointSensitivity = 1;
 	const int RIGHT;
 	const int LEFT;
 	float currentPosition = 0;
 	int direction = -1;
-	int inputValue = 0;
+	float inputValue = 0.0f;
 	
 	public:
 	SteeringController(
 		IControllableComponent *controllableComponent,
-		IControllerComponent *controllerComponent
+		IControllerComponent *controllerComponent,
+		IInputParser *inputParser
 	):
 	RIGHT(-1),
 	LEFT(1)
@@ -36,6 +39,7 @@ class SteeringController {
 		this->controllableComponent = controllableComponent;
 		this->controllerComponent = controllerComponent;
 		this->neutralPointValue = this->controllableComponent->getServoNeutralValue();
+		this->inputParser = inputParser;
 	}
 
 	/**
@@ -61,18 +65,7 @@ class SteeringController {
 		char debug[10] = "\0";
 
 		this->controllerComponent->read(buff);
-
-		if(strcmp(buff, debug) != 0) {
-			const char directionFlag = 'd';
-			if(strcmp(&buff[0], &directionFlag) == 0) {
-				const int lenght = strlen(buff);
-				char *target = "\0";
-				getSubString(buff, target, 2, lenght);
-				const int value = atoi(target);
-
-				this->inputValue = value;
-			}
-		}
+		this->inputParser->parse(buff, this->inputValue, 's');
 
 		//this->direction = this->getDirection(this->inputValue);
 		this->currentPosition = this->inputValue;
