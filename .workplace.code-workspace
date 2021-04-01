@@ -11,6 +11,18 @@
 			"**/bower_components": true,
 			"**/*.code-search": true,
 			"**/.pio": true
+		},
+		"files.associations": {
+			"*.tcc": "cpp",
+			"random": "cpp",
+			"fstream": "cpp",
+			"functional": "cpp",
+			"istream": "cpp",
+			"limits": "cpp",
+			"ostream": "cpp",
+			"sstream": "cpp",
+			"streambuf": "cpp",
+			"tuple": "cpp"
 		}
 	}
 }
