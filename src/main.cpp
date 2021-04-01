@@ -1,19 +1,20 @@
 // #include <examples/ESP12EVehicleExample.h>
-// #include <examples/ESP32LolinLEDExample.h>
-#include <examples/NonClassExample.h>
+//#include <examples/ESP32LolinLEDExample.h>
+// #include <examples/NonClassExample.h>
+#include <examples/StructuredMotorExample.h>
 
-NonClassExample* impl;
-// ESP32LolinLEDExample* implLED = new ESP32LolinLEDExample();
+StructuredMotorExample* impl;
+//ESP32LolinLEDExample* implLED = new ESP32LolinLEDExample();
 
 void setup() 
 { 
-	impl = new NonClassExample();
+	impl = new StructuredMotorExample();
   impl->setup();
-  // implLED->setup();
+  //implLED->setup();
 }  
  
 void loop()
 { 
   impl->loop();
-  // implLED->loop();
+  //implLED->loop();
 } 

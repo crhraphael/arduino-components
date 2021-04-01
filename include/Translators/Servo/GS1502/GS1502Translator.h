@@ -44,9 +44,12 @@ class GS1502Translator: public IArduinoComponent, public IControllableComponent 
 	}
 
   int translate(float accelCap) {
-		return (int)(GS1502Translator::MAX_ACCELERATION * accelCap);
+		return this->SERVO_STOPPED_VALUE + ((int)(GS1502Translator::MAX_ACCELERATION * accelCap));
 	}
-
+	void setRaw(float vel) {
+		int value = (int)(vel);
+		this->servoImpl->send(value);
+	}
   void set(float val) {
 		int value = this->translate(val);
 		this->servoImpl->send(value);

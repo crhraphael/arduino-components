@@ -25,6 +25,9 @@ class CommonLED: public IArduinoComponent, public IControllableComponent {
   void set(float val) {
 		digitalWrite(this->pin, (int)val);
 	}
+	void setRaw(float val) {
+		digitalWrite(this->pin, (int)val);
+	}
 };
 
 #endif

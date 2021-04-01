@@ -65,13 +65,11 @@ class AccelerationController {
 
 	void update() {
 		char buff[10] = "\0";
-		char debug[10] = "\0";
 
 		this->controllerComponent->read(buff);
 		this->inputParser->parse(buff, this->inputValue, 'a');
-		Serial.println(this->inputValue);
 
-		//this->controllableComponent->set(this->inputValue);
+		this->controllableComponent->set(this->inputValue);
 
 		// this->configureDirection();
 		// this->translateAcceleration();
@@ -81,9 +79,10 @@ class AccelerationController {
 		// Serial.println(this->currentAcceleration);
 		// Serial.print("*");
 		// Serial.println(this->reverse * this->currentAcceleration);
-		// int i = 1000;
-		// for(i = 1000; i< 2000; i++) {
-		// 	this->controllableComponent->set(i);
+		// int i = 0;
+		// for(i = 0; i < 2000; i+=100) {
+		// 	this->controllableComponent->setRaw(i);
+		// 	delay(1000);
 		// }
 	}
 

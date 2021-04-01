@@ -54,7 +54,12 @@ class MG90SCustomTranslator: public IArduinoComponent, public IControllableCompo
 	}
   void set(float vel) {
 		int value = this->translate(vel);
-		this->servoImpl->sendMicroseconds(vel);
+		this->servoImpl->send(value);
+	}
+
+	void setRaw(float vel) {
+		int value = (int)(vel);
+		this->servoImpl->send(value);
 	}
 };
 
