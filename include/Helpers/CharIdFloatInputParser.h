@@ -19,7 +19,6 @@ class CharIdFloatInputParser : public IInputParser {
 				char target[10] = "\0";
 				getSubString(buff, target, 2, lenght);
 				float value = atof(target);
-
 				result = value;
 			}
 		}
