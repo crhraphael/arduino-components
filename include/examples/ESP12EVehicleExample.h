@@ -83,8 +83,8 @@ class ESP12EVehicleExample {
 	
 	void defineServoDevices() {
 		this->servoDirImpl = new ServoImplementation(SERVO_DIRECTION_PIN);
-		const int maxIncrement = 50;
-		const int neutralValue = 50;
+		const int maxIncrement = 60;
+		const int neutralValue = 75;
 		this->servoDirComp = new GS1502Translator(
 			this->servoDirImpl, 
 			maxIncrement, 
