@@ -6,17 +6,18 @@
 A fully functional code library with many implementations of electronic components to ease readability and modifications for future changes. Made with C++ OOP with .h-only files 
 
 ## INDEX
-  * [REQUIREMENTS](#requirements-)
-  * [DESCRIPTION](#description-)
-	* [THE CODE SO FAR](#the-code-so-far-)
-	* [EMOJIS](#emojis-)
-  * [INSTALLING](#installing-)
-  * [RUNNING](#running-)
-  * [TESTS](#tests-)
-  * [DEPLOY CI/CD](#deploy-ci-cd-)
-  * [VARIÁVEIS DE AMBIENTE](#variaveis-de-ambiente-)
-  * [GUIA DE COMANDOS](#guia-de-comandos-)
-  * [INTEGRAÇÃO COM BITBUCKET](#integracao-com-bitbucket-)
+
+* [REQUIREMENTS](#requirements)
+* [DESCRIPTION](#description)
+* [THE CODE SO FAR](#the-code-so-far)
+* [EMOJIS](#emojis)
+* [INSTALLING](#installing)
+* [RUNNING](#running)
+* [TESTS](#tests)
+* [DEPLOY CI/CD](#deploy-ci-cd)
+* [VARIÁVEIS DE AMBIENTE](#variaveis-de-ambiente)
+* [GUIA DE COMANDOS](#guia-de-comandos)
+* [INTEGRAÇÃO COM BITBUCKET](#integracao-com-bitbucket)
 
 # DESCRIPTION [goto index](#index)
 This project started as a learning process for a VSCODE extension called [`PlatformIO IDE`](https://marketplace.visualstudio.com/items?itemName=platformio.platformio-ide).
