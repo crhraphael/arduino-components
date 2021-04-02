@@ -14,17 +14,17 @@ A fully functional code library with many implementations of electronic componen
 * [INSTALLING](#installing)
 * [RUNNING](#running)
 * [TESTS](#tests)
-* [DEPLOY CI/CD](#deploy-ci-cd)
 * [VARIÁVEIS DE AMBIENTE](#variaveis-de-ambiente)
 * [GUIA DE COMANDOS](#guia-de-comandos)
-* [INTEGRAÇÃO COM BITBUCKET](#integracao-com-bitbucket)
 
-# DESCRIPTION [goto index](#index)
+# DESCRIPTION 
+[goto index](#index)
 This project started as a learning process for a VSCODE extension called [`PlatformIO IDE`](https://marketplace.visualstudio.com/items?itemName=platformio.platformio-ide).
 
 The biggest incentive was to migrate from Arduino IDE to a more robust code editor. 
 
-## THE CODE SO FAR [goto index](#index)
+## THE CODE SO FAR 
+[goto index](#index)
 
 The codes found here are just pieces that I wrote for my personal projects and felt like it could be useful later.
 
@@ -42,6 +42,7 @@ Examples are instantiated into the `main.c` file.
 Since this project does not target a specific project/purpose, many examples can be built, so the `main.cpp` will be constantly modified to adequate the most recent examples, or the ones I use the most.
 
 
-## EMOJIS [goto index](#index)
+## EMOJIS 
+[goto index](#index)
 
 [Lista de emojis](https://emojis.github.io/index.html)

@@ -1,0 +1,66 @@
+/* Sweep
+ by BARRAGAN <http://barraganstudio.com>
+ This example code is in the public domain.
+
+ modified 8 Nov 2013
+ by Scott Fitzgerald
+ http://www.arduino.cc/en/Tutorial/Sweep
+*/
+
+#include <Servo.h>
+
+Servo myservo;  // create servo object to control a servo
+// twelve servo objects can be created on most boards
+
+int pos = 0;    // variable to store the servo position
+
+void setup() {
+  Serial.begin(9600);
+
+  myservo.attach(9);  // attaches the servo on pin 9 to the servo object
+}
+
+int maxLeft = 1340;
+int maxRight = 1560;
+int dir = 1;
+int diff = 20;
+int neutral = 1450;
+
+int increment = 4;
+int interval = 1000;
+
+void loop() {
+  int i = neutral;
+  
+  Serial.println("<-");
+  for(i=neutral; i<= maxRight;i+=increment){
+    myservo.writeMicroseconds(i);              // tell servo to go to position in variable 'pos'
+
+    delay(interval);
+    Serial.println(i);
+  } 
+
+  for(i=maxRight; i>= neutral;i-=increment){
+    myservo.writeMicroseconds(i);              // tell servo to go to position in variable 'pos'
+
+    delay(interval);
+    Serial.println(i);
+  }
+
+  Serial.println("->");
+  for(i=neutral; i>= maxLeft;i-=increment){
+    myservo.writeMicroseconds(i);              // tell servo to go to position in variable 'pos'
+
+    delay(interval);
+    Serial.println(i);
+  } 
+
+  for(i=maxLeft; i<= neutral;i+=increment){
+    myservo.writeMicroseconds(i);              // tell servo to go to position in variable 'pos'
+
+    delay(interval);
+    Serial.println(i);
+  }
+  delay(2000); 
+
+}
