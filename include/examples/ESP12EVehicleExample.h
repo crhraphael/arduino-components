@@ -21,8 +21,10 @@
 #include <InputControllers/InputController.h>
 #include <InputControllers/AccelerationController.h>
 #include <InputControllers/SteeringController.h>
+#include <Translators/LEDs/CommonLED.h>
 
 #include <Helpers/CharIdFloatInputParser.h>
+#include <Helpers/HeadlightInputParser.h>
 
 
 #ifndef WIFICREDENTIALS
@@ -49,12 +51,10 @@
  */
 const int SERVO_DIRECTION_PIN = D2; 
 const int SERVO_ACCELERATION_PIN = D7; 
-// const int POT_PIN = A0;
+
+const int LED_PIN = LED_BUILTIN | 2;
 
 const int DEFAULT_BAULD_RATE = 9600;
-
-// const char END_MSG_BT = '.';
-
 
 /**
  * Experiment using an ESP32 Lolin v3 as prototype board
@@ -68,6 +68,7 @@ class ESP12EVehicleExample {
 
 	IInputParser *accelerationParser;
 	IInputParser *directionParser;
+	IInputParser *headlightsParser;
 	
 	IWirelessCommComponent *esp12eComp;
 
@@ -80,18 +81,30 @@ class ESP12EVehicleExample {
 
 	SteeringController *steController;
 	AccelerationController *accelController;
+	HeadLightsController *headlightsController;
 	
+	CommonLED *boardStatusLED;	
+	bool isHigh = true;
+
+	bool isConnected = false;	
+
+	unsigned int lastMillis = 0;
+	const unsigned int interv = 500;
+
+	CommonLED *frontLeftHeadlightLED;
+	CommonLED *frontRightHeadlightLED;
+
 	void defineServoDevices() {
 		this->servoDirImpl = new ServoImplementation(SERVO_DIRECTION_PIN);
-		const int maxIncrement = 60;
-		const int neutralValue = 75;
+		const int maxIncrement = 42;
+		const int neutralValue = 107;
 		this->servoDirComp = new GS1502Translator(
 			this->servoDirImpl, 
 			maxIncrement, 
 			neutralValue);
 
-		const int maxIncrementAccellServo = 13;
-		const int neutralValueAccellServo = 87;
+		const int maxIncrementAccellServo = 14;
+		const int neutralValueAccellServo = 86;
 		this->servoVelImpl = new ServoImplementation(SERVO_ACCELERATION_PIN);
 		this->servoVelComp = new MG90SCustomTranslator(
 			this->servoVelImpl, 
@@ -102,6 +115,7 @@ class ESP12EVehicleExample {
 	void defineInputParsers() {
 		this->accelerationParser = new CharIdFloatInputParser();
 		this->directionParser = new CharIdFloatInputParser();
+		this->headlightsParser = new HeadlightInputParser();
 	}
 
 	void defineWiFIModule() {
@@ -120,29 +134,56 @@ class ESP12EVehicleExample {
 			this->servoDirComp, 
 			this->esp12eComp,
 			this->directionParser);
+
+		// this->headlightsController = new HeadLightsController(
+		// 	frontLeftHeadlightLED,
+		// 	frontRightHeadlightLED,
+		// 	this->esp12eComp,
+		// 	this->headlightsParser
+		// );
 	}
 
 	public:
 	void setup() 
 	{ 
 		Serial.begin(DEFAULT_BAULD_RATE);
+		this->boardStatusLED = new CommonLED(LED_PIN);
 
 		this->defineServoDevices();
 		this->defineInputParsers();
 		this->defineWiFIModule();
 		this->defineControllers();
 
-	} 
+	}
 	
 	void loop()
 	{ 
-		this->esp12eComp->listen();
+		if(this->esp12eImpl->IsConnected() != wl_status_t::WL_CONNECTED) {
+			unsigned int currentMillis = millis();
+			uint8_t ledStatus = (this->isHigh) ? LED_ON : LED_OFF;
 
-		this->accelController->update();
-		//Serial.println((int)this->accelController->getCurrentAcceleration());
 
-		this->steController->update();
+			this->boardStatusLED->set(ledStatus);
 
+			if(currentMillis - lastMillis > interv) {
+				this->isHigh = !this->isHigh;
+				lastMillis = currentMillis;
+			}
+		} else {
+			if(isConnected == false) {
+				isConnected = true;
+				this->esp12eImpl->WriteIP();
+				this->esp12eImpl->WebSocketConnect();
+				this->boardStatusLED->set(LED_ON);
+			}
+
+			this->esp12eComp->listen();
+
+			this->accelController->update();
+			this->steController->update();
+
+			// this->headlightsController->update();
+		}
 	} 
 };
 
