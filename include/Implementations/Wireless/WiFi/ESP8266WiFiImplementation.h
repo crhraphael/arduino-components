@@ -6,7 +6,7 @@
 #include <ESP8266WiFi.h>
 #include <WebSocketsServer.h>
 
-//Correção nivel lógico invertido
+//Correção nível lógico invertido para ESP12E
 #define ON LOW
 #define OFF HIGH
  
@@ -43,27 +43,26 @@ class ESP8266WiFiImplementation: public IWirelessWiFiImplementation {
 		this->bufferLength = bufferLength;
 		this->buffer = new char[bufferLength]();
 
-		// int numberOfNetworks = this->wifiImpl.scanNetworks();
+		this->connect(ssid, password);
+	}
 
-		// for(int i =0; i<numberOfNetworks; i++){
-
-		// 		Serial.print("Network name: ");
-		// 		Serial.println(this->wifiImpl.SSID(i));
-		// 		Serial.print("Signal strength: ");
-		// 		Serial.println(this->wifiImpl.RSSI(i));
-		// 		Serial.println("-----------------------");
-
-		// }
-		this->wifiImpl.begin(ssid, password);
-		while (this->wifiImpl.status() != WL_CONNECTED) {
-			Serial.print(".");
-			// Serial.print(this->wifiImpl.status());
-			delay(100);
-		}
+	public: void WriteIP() {
 		Serial.println(this->wifiImpl.localIP());
-		
+	}	
+
+	void connect(		
+		const char *ssid, 
+		const char *password
+	) {
+		this->wifiImpl.begin(ssid, password);
+	}
+
+	public: wl_status_t IsConnected() {
+		return this->wifiImpl.status();
+	}
+
+	public: void WebSocketConnect() {
 		this->webSocket.begin();
-		Serial.print(this->wifiImpl.status());
 		this->webSocket.onEvent(
 			std::bind(
 				&ESP8266WiFiImplementation::webSocketEvent, 
@@ -72,7 +71,19 @@ class ESP8266WiFiImplementation: public IWirelessWiFiImplementation {
 				std::placeholders::_2, 
 				std::placeholders::_3,
 				std::placeholders::_4));
-	};
+	}
+
+	void scanNetworks() {
+		int numberOfNetworks = this->wifiImpl.scanNetworks();
+
+		for(int i = 0; i < numberOfNetworks; i++) {
+			Serial.print("Network name: ");
+			Serial.println(this->wifiImpl.SSID(i));
+			Serial.print("Signal strength: ");
+			Serial.println(this->wifiImpl.RSSI(i));
+			Serial.println("-----------------------");
+		}
+	}
 
 	void webSocketEvent(
 		uint8_t num, 
@@ -120,9 +131,12 @@ class ESP8266WiFiImplementation: public IWirelessWiFiImplementation {
 	}
 
 	void readBuffer(char *buffer) {
-		const char *msg = (!this->isListening)
-			? "error: class is not listening. Did you called listen?"
-			: this->buffer;
+		const char *msg = this->buffer;//"error: class is not listening. Did you called listen?";
+		// (!this->isListening)
+		// 	? "error: class is not listening. Did you called listen?"
+		// 	: this->buffer;
+
+		// Serial.println(msg);
 		strcpy(buffer, msg);
 	}
 
