@@ -43,6 +43,7 @@ class AccelerationController {
 		this->controllerComponent = controllerComponent;
 		this->neutralPointValue = this->controllableComponent->getServoNeutralValue();
 		this->inputParser = inputParser;
+		this->inputValue = 0;
 	}
 
 	/**

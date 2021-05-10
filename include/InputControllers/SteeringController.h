@@ -24,6 +24,7 @@ class SteeringController {
 	const int RIGHT;
 	const int LEFT;
 	float currentPosition = 0;
+	float oldPosition = 0;
 	int direction = -1;
 	float inputValue = 0.0f;
 	
@@ -40,6 +41,7 @@ class SteeringController {
 		this->controllerComponent = controllerComponent;
 		this->neutralPointValue = this->controllableComponent->getServoNeutralValue();
 		this->inputParser = inputParser;
+		this->inputValue = 0;
 	}
 
 	/**
@@ -61,13 +63,13 @@ class SteeringController {
 	}
 
 	void update() {
-		char buff[10] = "\0";
+		char buff[10] = "\00000000";
 
 		this->controllerComponent->read(buff);
 		this->inputParser->parse(buff, this->inputValue, 's');
 
-		//this->direction = this->getDirection(this->inputValue);
 		this->currentPosition = this->inputValue;
+
 		this->controllableComponent->set(this->inputValue);
 
 	}
