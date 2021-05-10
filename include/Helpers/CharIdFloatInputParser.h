@@ -9,6 +9,8 @@ class CharIdFloatInputParser : public IInputParser {
 	char debug[10] = "\0";
 
   public:
+	void parse(char *buff, char result[4], char flagToCompare) {
+	}
 	void parse(char *buff, float &result, char flagToCompare) {
 		if(strcmp(buff, debug) != 0) {
 			const char payloadFlag = char(buff[0]);
@@ -20,6 +22,20 @@ class CharIdFloatInputParser : public IInputParser {
 				getSubString(buff, target, 2, lenght);
 				float value = atof(target);
 				result = value;
+			}
+		}
+	}
+	void parse(char *buff, float *result, char flagToCompare) {
+		if(strcmp(buff, debug) != 0) {
+			const char payloadFlag = char(buff[0]);
+
+
+			if(payloadFlag == flagToCompare) {
+				const int lenght = strlen(buff);
+				char target[10] = "\0";
+				getSubString(buff, target, 2, lenght);
+				float value = atof(target);
+				result = &value;
 			}
 		}
 	}
