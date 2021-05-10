@@ -7,3 +7,5 @@
 # App configurations #
 **/Config/*
 !**/Config/*.example.*
+
+.developer.txt

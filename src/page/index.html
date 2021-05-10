@@ -3,51 +3,47 @@
 	<head>
 		<title>WiFI Controller</title>
 		<script type="text/javascript" src="scripts/core.js"></script>
-		<style type="text/css">
-			.slider-wrapper {
-				display: inline-block;
-				width: 20px;
-				height: 150px;
-				padding: 0;
-			}
-			.slider-wrapper input {
-				width: 150px;
-				height: 20px;
-				margin: 0;
-				transform-origin: 75px 75px;
-				transform: rotate(-90deg);
-			}
-			.controller {
-				background-color: bisque;
-				width: 90%;
-				height: 30%;
-				position: relative;
-			}
-			.controller .left {
-				background-color: burlywood;
-				float:left;
-			}
-			.controller .right {
-				background-color: coral;
-				float:right;
-			}
-		</style>
 	</head>
 	<body>
 		<div class="controller">
 			<form>
-				<div class="left">
-					<input type="button" min="0" max="1024" value="&lt;"></input>
-					<input type="button" min="0" max="1024" value="&gt;"></input>				
+				<div>
+					<label>Config</label>
+					<br>
+					<label>Vehicle IP:</label>
+					<input id="car-ip" name="car-ip" type="text" value="">
+					<button id="connect-to-btn" type="button">Connect</button>
+					<br>
+					<button>Enable/Disable Gamepad</button><label>Disabled</label>
 				</div>
-				<div class="right">
-					<div class="slider-wrapper">
-						<input id="acceleration-input" type="range" min="1320" max="1570">
+				<hr>
+				<div>
+					<label>Vehicle info:</label>
+
+					<div id="car-info" style="display:none">
+						<label>Name:</label><div id="car-info-name"></div>
+						<label>Year:</label><div id="car-info-year"></div>
 					</div>
-					<div class="slider-wrapper">
-						<input id="steering-input" type="range" min="1320" max="1570">
+
+					<div id="car-info-not-connected">
+						<label>No vehicle connected</label>
 					</div>
 				</div>
+				<hr>
+				<div>
+					<label>Steering:</label>
+					<input id="steering-input" type="range">
+					<label id="lbl-steering">1.0</label>
+				</div>
+				<br>
+				<div>
+					<label>Velocity:</label>
+					<input id="acceleration-input" type="range">
+					<label id="lbl-velocity">1.0</label>
+				</div>
+				<br>
+				<hr>
+				<div id="console-output"></div>
 			</form>
 		</div>
 	</body>
