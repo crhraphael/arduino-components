@@ -28,6 +28,9 @@ class MG90SCustomTranslator: public IArduinoComponent, public IControllableCompo
 	 */
 	const int SERVO_STOPPED_VALUE;
 
+	int valueToSend;
+	int lastValueSent;
+
 	public:
 	MG90SCustomTranslator(
 		IServoImplementation* servoImpl, 
@@ -38,6 +41,8 @@ class MG90SCustomTranslator: public IArduinoComponent, public IControllableCompo
 		SERVO_STOPPED_VALUE(neutralValue)
 	{
 		this->servoImpl = servoImpl;
+		valueToSend = SERVO_STOPPED_VALUE;
+		lastValueSent = valueToSend;
 	};
 
 
@@ -53,14 +58,25 @@ class MG90SCustomTranslator: public IArduinoComponent, public IControllableCompo
 		return (int)(this->SERVO_STOPPED_VALUE + ((float)MG90SCustomTranslator::MAX_ACCELERATION * accelCap));
 	}
   void set(float vel) {
-		int value = this->translate(vel);
-		this->servoImpl->send(value);
+		valueToSend = this->translate(vel);
+
+		if(valueToSend != lastValueSent) {
+			Serial.println(valueToSend);
+		}
+		this->servoImpl->send(valueToSend);
+		lastValueSent = valueToSend;
 	}
 
-	void setRaw(float vel) {
-		int value = (int)(vel);
-		this->servoImpl->send(value);
+	void setRaw(int vel) {
+		valueToSend = (vel);
+
+		if(valueToSend != lastValueSent) {
+			Serial.println(valueToSend);
+		}
+		this->servoImpl->send(valueToSend);
+		lastValueSent = valueToSend;
 	}
+
 };
 
 #endif

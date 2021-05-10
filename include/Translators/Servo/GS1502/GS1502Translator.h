@@ -21,6 +21,9 @@ class GS1502Translator: public IArduinoComponent, public IControllableComponent 
 	 * Valor que mantem o servo parado.
 	 */
 	const int SERVO_STOPPED_VALUE;
+
+	int valueToSend;
+	int lastValueSent;
 	public:
 	GS1502Translator(
 		IServoImplementation* servoImpl, 
@@ -30,7 +33,9 @@ class GS1502Translator: public IArduinoComponent, public IControllableComponent 
 		MAX_ACCELERATION(maxIncrement), 
 		SERVO_STOPPED_VALUE(neutralValue)
 	{
-		this->servoImpl = servoImpl;
+		this->servoImpl = servoImpl;		
+		valueToSend = SERVO_STOPPED_VALUE;
+		lastValueSent = valueToSend;
 	};
 
 
@@ -44,15 +49,26 @@ class GS1502Translator: public IArduinoComponent, public IControllableComponent 
 	}
 
   int translate(float accelCap) {
-		return this->SERVO_STOPPED_VALUE + ((int)(GS1502Translator::MAX_ACCELERATION * accelCap));
+		return (int)(this->SERVO_STOPPED_VALUE + ((float)GS1502Translator::MAX_ACCELERATION * accelCap));
 	}
-	void setRaw(float vel) {
-		int value = (int)(vel);
-		this->servoImpl->send(value);
+  void set(float vel) {
+		valueToSend = this->translate(vel);
+
+		if(valueToSend != lastValueSent) {
+			Serial.println(valueToSend);
+		}
+		this->servoImpl->send(valueToSend);
+		lastValueSent = valueToSend;
 	}
-  void set(float val) {
-		int value = this->translate(val);
-		this->servoImpl->send(value);
+
+	void setRaw(int vel) {
+		valueToSend = (vel);
+
+		if(valueToSend != lastValueSent) {
+			Serial.println(valueToSend);
+		}
+		this->servoImpl->send(valueToSend);
+		lastValueSent = valueToSend;
 	}
 };
 
