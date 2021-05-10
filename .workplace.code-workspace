@@ -22,7 +22,11 @@
 			"ostream": "cpp",
 			"sstream": "cpp",
 			"streambuf": "cpp",
-			"tuple": "cpp"
+			"tuple": "cpp",
+			"system_error": "cpp",
+			"array": "cpp",
+			"type_traits": "cpp",
+			"utility": "cpp"
 		}
 	}
 }
