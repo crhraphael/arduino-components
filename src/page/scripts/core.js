@@ -1,6 +1,6 @@
 class ConsoleOutput {
-	constructor() {
-		this.consoleElement = document.querySelector('#console-output');
+	constructor(elementId) {
+		this.consoleElement = document.querySelector(elementId + ' #console-output');
 	}
 
 	write(val) {
@@ -13,7 +13,7 @@ class ConsoleOutput {
 }
 
 function bootstrap() {
-	const consoleOutput = new ConsoleOutput();
+	const consoleOutput = new ConsoleOutput('');
 	
 	class WSClient {
 	
@@ -85,9 +85,9 @@ function bootstrap() {
 		}
 	}
 	class AccelerationInput extends AInput {
-		constructor() {
+		constructor(elementId) {
 			super();
-			this.input = document.querySelector('#acceleration-input');
+			this.input = document.querySelector(elementId + ' #acceleration-input');
 			this.input.setAttribute('max', 1);
 			this.input.setAttribute('min', -1);
 			this.input.setAttribute('step', '0.1');
@@ -96,9 +96,9 @@ function bootstrap() {
 		}
 	}
 	class SteeringInput extends AInput {
-		constructor() {
+		constructor(elementId) {
 			super();
-			this.input = document.querySelector('#steering-input');
+			this.input = document.querySelector(elementId + ' #steering-input');
 			this.input.setAttribute('max', 1);
 			this.input.setAttribute('min', -1);
 			this.input.setAttribute('step', '0.1');
@@ -130,10 +130,13 @@ function bootstrap() {
 	}
 
 	class GamepadController {
-		constructor(inputs = {
-			acceleration: null,
-			steering: null
-		}) {
+		constructor(
+			elementId,
+			inputs = {
+				acceleration: null,
+				steering: null
+			}
+		) {
 			this.stateEnum = {
 				ENABLED: 'enabled',
 				DISABLED: 'disabled'
@@ -141,8 +144,8 @@ function bootstrap() {
 
 			this.inputs = inputs;
 			
-			this.input = document.querySelector('#gamepad-enable-btn');
-			this.label = document.querySelector('#gamepad-enable-status-lbl');
+			this.input = document.querySelector(elementId + ' #gamepad-enable-btn');
+			this.label = document.querySelector(elementId + ' #gamepad-enable-status-lbl');
 
 			this.isEnabled = this.gamepad && this.input.getAttribute('data-value') == this.stateEnum.ENABLED;
 
@@ -187,24 +190,29 @@ function bootstrap() {
 	
 	class Core {
 	
-		constructor() {
+		constructor(controllerId) {
 			this.interval = 10;
 
-			this.accelerationInput = new AccelerationInput();	
-			this.steeringInput = new SteeringInput();
+			this.elementId = '#vehicle-controller-' + controllerId;
+
+			this.accelerationInput = new AccelerationInput(this.elementId);	
+			this.steeringInput = new SteeringInput(this.elementId);
 	
 			this.connection = false;
-			this.gamepadController = new GamepadController({
-				acceleration: this.accelerationInput,
-				steering: this.steeringInput,
-			});
+			this.gamepadController = new GamepadController(
+				this.elementId,
+				{
+					acceleration: this.accelerationInput,
+					steering: this.steeringInput,
+				}
+			);
 
-			this.connectBtn = document.querySelector("#connect-to-btn");
+			this.connectBtn = document.querySelector(this.elementId + " #connect-to-btn");
 			this.connectBtn.addEventListener('click', this.connect.bind(this));
 		}
 		
 		connect() {
-			const clientIP = document.querySelector("#car-ip").value;
+			const clientIP = document.querySelector(this.elementId + " #car-ip").value;
 			const endpoint = '';
 
 			this.connection = true;
@@ -232,7 +240,7 @@ function bootstrap() {
 	
 
 
-	const core = new Core();
+	const core = new Core(0);
 	//core.loop();
 
 	setInterval(core.loop.bind(core), 10);
