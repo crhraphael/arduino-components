@@ -11,41 +11,9 @@ class ConsoleOutput {
 		this.consoleElement.innerHTML = "";
 	}
 }
-class GamePad {
-	constructor() {
-		this.gamepad = navigator.getGamepads()[0]
-		this.isEnabled = false;
-		setInterval(() => {
-			if(this.gamepad) return;
-			this.gamepad = navigator.getGamepads()[0]
-		}, 1000);
-	}
-	Enable() {
-		this.isEnabled = true;
-
-	}
-	Disable() {
-		this.isEnabled = false;
-	}
-
-	IsEnabled() {
-		return this.isEnabled;
-	}
-	IsPlugged() {
-		return this.gamepad
-	}
-
-	GetLeftAxleValue(precision) {
-		return this.gamepad.axes[1].toPrecision(precision)
-	}
-	GetRightAxleValue(precision) {
-		return this.gamepad.axes[2].toPrecision(precision)
-	}
-}
 
 function bootstrap() {
 	const consoleOutput = new ConsoleOutput();
-	const gamepad = new GamePad();
 	
 	class WSClient {
 	
@@ -101,8 +69,16 @@ function bootstrap() {
 			return this.input.value;
 		}
 
+		SetValue(val) {
+			this.input.value = val;
+		}
+
 		SetOldValue(val) {
 			this.oldValue = val;
+		}
+
+		HasChanged() {
+			return this.input.value != this.oldValue
 		}
 		GetOldValue() {
 			return this.oldValue;
@@ -118,10 +94,6 @@ function bootstrap() {
 			this.input.value = 0;
 			this.oldValue = this.input.value;
 		}
-
-		GetGamePadValue() {
-			return gamepad.GetLeftAxleValue(2);
-		}
 	}
 	class SteeringInput extends AInput {
 		constructor() {
@@ -132,10 +104,6 @@ function bootstrap() {
 			this.input.setAttribute('step', '0.1');
 			this.input.value = 0;
 			this.oldValue = this.input.value;
-		}
-
-		GetGamePadValue() {
-			return gamepad.GetRightAxleValue(2);
 		}
 	}
 
@@ -160,6 +128,60 @@ function bootstrap() {
 			});
 		}
 	}
+
+	class GamepadController {
+		constructor(inputs = {
+			acceleration: null,
+			steering: null
+		}) {
+			this.stateEnum = {
+				ENABLED: 'enabled',
+				DISABLED: 'disabled'
+			};
+
+			this.inputs = inputs;
+			
+			this.input = document.querySelector('#gamepad-enable-btn');
+			this.label = document.querySelector('#gamepad-enable-status-lbl');
+
+			this.isEnabled = this.gamepad && this.input.getAttribute('data-value') == this.stateEnum.ENABLED;
+
+			this.input.addEventListener('click', this.onClick.bind(this));
+			window.addEventListener('gamepadconnected', this.onConnect.bind(this));
+			this.axleL = 0;
+			this.axleR = 0;
+		}
+
+		onConnect(ev) {
+				console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.",
+					ev.gamepad.index, ev.gamepad.id,
+					ev.gamepad.buttons.length, ev.gamepad.axes.length);
+
+				this.gamepad = ev.gamepad
+		}
+
+		onClick(ev) {
+			this.isEnabled = this.gamepad && !this.isEnabled;
+
+			const msg = this.isEnabled 
+				? this.stateEnum.ENABLED
+				: this.stateEnum.DISABLED
+
+			this.label.innerHTML = msg;
+		}
+
+		update() {
+			if(!this.isEnabled) return;
+
+			this.axleL = this.gamepad.axes[0].toPrecision(2);
+			this.axleR = this.gamepad.axes[4].toPrecision(2) * -1;
+
+			this.inputs.steering.SetValue(this.axleL);			
+			this.inputs.acceleration.SetValue(this.axleR);
+		}
+
+
+	}
 	
 
 	
@@ -172,8 +194,10 @@ function bootstrap() {
 			this.steeringInput = new SteeringInput();
 	
 			this.connection = false;
-			this.input = new InputController();		
-			this.gamepad = navigator.getGamepads()[0];
+			this.gamepadController = new GamepadController({
+				acceleration: this.accelerationInput,
+				steering: this.steeringInput,
+			});
 
 			this.connectBtn = document.querySelector("#connect-to-btn");
 			this.connectBtn.addEventListener('click', this.connect.bind(this));
@@ -189,42 +213,20 @@ function bootstrap() {
 		}
 
 		loop() {
+			this.gamepadController.update();
 			if(!this.connection) return;
-			// this.gamepad = navigator.getGamepads()[0];
-			// if(this.gamepad) {
-			// 	const val = this.gamepad.axes[1];
-			// 	const valB = this.gamepad.axes[2];
-			// 	// if(this.input.inputs.ArrowDown) {
-			// 	// 	this.accelerationInput.value = val;
-			// 	// }
-			// 	// if(this.input.inputs.ArrowUp) {
-			// 	// 	this.accelerationInput.value = val;
-			// 	// }
-	
-			// 	if(val != this.lastVal) {
-			// 		this.lastVal = val;
-			// 		this.client.send("a:" + val.toPrecision(1));
-			// 	}
-	
-			// 	if(valB != this.lastValB) {
-			// 		this.lastValB = valB;
-			// 		this.client.send("s:" + valB.toPrecision(1));
-			// 	}
-			// } else {
-			const accelValue = this.accelerationInput.GetValue();	
-			if(accelValue != this.accelerationInput.GetOldValue()) {
+
+			if(this.accelerationInput.HasChanged()) {
+				const accelValue = this.accelerationInput.GetValue();	
 				this.accelerationInput.SetOldValue(accelValue);
 				this.client.send("a:"+accelValue);
 			}
-			console.log(this.steeringInput.GetValue())
 	
-			const steerValue = this.steeringInput.GetValue();
-			if(steerValue != this.steeringInput.GetOldValue()) {
+			if(this.steeringInput.HasChanged()) {
+				const steerValue = this.steeringInput.GetValue();
 				this.steeringInput.SetOldValue(steerValue);
 				this.client.send("s:"+steerValue);
-			}
-			// }
-	
+			}	
 		}
 	}
 	

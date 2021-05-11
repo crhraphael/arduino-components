@@ -3,21 +3,32 @@
 	<head>
 		<title>WiFI Controller</title>
 		<script type="text/javascript" src="scripts/core.js"></script>
+		<script type="text/javascript" src="scripts/interface.js"></script>
 	</head>
 	<body>
+
 		<div class="controller">
 			<form>
-				<div>
-					<label>Config</label>
+				<div style="display: block; height:15px">
+					<div style="background-color: rgb(124, 221, 124); display: flexbox; margin: 2px; width: 8px; height: 10px; float: left;"></div>
+					<div style="background-color: rgb(124, 221, 124); display: flexbox; margin: 2px; width: 8px; height: 10px; float: left;"></div>
+					<div style="background-color: rgb(124, 221, 124); display: flexbox; margin: 2px; width: 8px; height: 10px; float: left;"></div>
+					<div style="background-color: rgb(124, 221, 124); display: flexbox; margin: 2px; width: 8px; height: 10px; float: left;"></div>
+				</div>
+				<div class="section">
+					<label>Configurations:</label>
 					<br>
 					<label>Vehicle IP:</label>
 					<input id="car-ip" name="car-ip" type="text" value="">
 					<button id="connect-to-btn" type="button">Connect</button>
 					<br>
-					<button>Enable/Disable Gamepad</button><label>Disabled</label>
+					<button id="gamepad-enable-btn" type="button" data-value="disabled">
+						Enable/Disable Gamepad
+					</button>
+					<label id="gamepad-enable-status-lbl">Disabled</label>
 				</div>
 				<hr>
-				<div>
+				<div class="section">
 					<label>Vehicle info:</label>
 
 					<div id="car-info" style="display:none">
@@ -30,20 +41,23 @@
 					</div>
 				</div>
 				<hr>
-				<div>
-					<label>Steering:</label>
-					<input id="steering-input" type="range">
-					<label id="lbl-steering">1.0</label>
-				</div>
-				<br>
-				<div>
+				<div class="section">
+					<label>Control input:</label>
+					<div>
+						<label>Steering:</label>
+						<input id="steering-input" type="range">
+						<label id="lbl-steering">1.0</label>
+					</div>
+					<br>
+					<div>
 					<label>Velocity:</label>
-					<input id="acceleration-input" type="range">
-					<label id="lbl-velocity">1.0</label>
+						<input id="acceleration-input" type="range">
+						<label id="lbl-velocity">1.0</label>
+					</div>
+					<br>
+					<hr>
+					<div id="console-output"></div>
 				</div>
-				<br>
-				<hr>
-				<div id="console-output"></div>
 			</form>
 		</div>
 	</body>
