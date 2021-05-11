@@ -1,14 +1,17 @@
 class ConsoleOutput {
 	constructor(elementId) {
 		this.consoleElement = document.querySelector(elementId + ' #console-output');
+		this.outputWindow = document.querySelector(elementId + ' #output');
+		this.clearBtn = document.querySelector(elementId + ' #clear-console-btn');
+		this.clearBtn.addEventListener('click', this.clear.bind(this));
 	}
 
 	write(val) {
-		this.consoleElement.innerHTML += val + "<br>";
+		this.outputWindow.innerHTML += val + "<br>";
 	}
 
 	clear() {
-		this.consoleElement.innerHTML = "";
+		this.outputWindow.innerHTML = "";
 	}
 }
 
@@ -156,9 +159,18 @@ function bootstrap() {
 		}
 
 		onConnect(ev) {
-				console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.",
-					ev.gamepad.index, ev.gamepad.id,
-					ev.gamepad.buttons.length, ev.gamepad.axes.length);
+			const msg = "Gamepad connected at index " 
+				+ ev.gamepad.index 
+				+ ": " 
+				+ ev.gamepad.id 
+				+ ". "
+				+ ev.gamepad.buttons.length 
+				+ " buttons, " 
+				+ ev.gamepad.axes.length 
+				+ " axes." 
+			
+				console.log(msg);
+				consoleOutput.write(msg);
 
 				this.gamepad = ev.gamepad
 		}
@@ -166,11 +178,15 @@ function bootstrap() {
 		onClick(ev) {
 			this.isEnabled = this.gamepad && !this.isEnabled;
 
-			const msg = this.isEnabled 
+			const status = this.isEnabled 
 				? this.stateEnum.ENABLED
 				: this.stateEnum.DISABLED
+			
+			const msg = "Gamepad is " + status;
 
-			this.label.innerHTML = msg;
+			consoleOutput.write(msg);
+
+			this.label.innerHTML = status;
 		}
 
 		update() {
