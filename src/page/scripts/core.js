@@ -214,7 +214,7 @@ function bootstrap() {
 			const accelValue = this.accelerationInput.GetValue();	
 			if(accelValue != this.accelerationInput.GetOldValue()) {
 				this.accelerationInput.SetOldValue(accelValue);
-				this.client.send(accelValue);
+				this.client.send("a:"+accelValue);
 			}
 			console.log(this.steeringInput.GetValue())
 	
