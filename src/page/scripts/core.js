@@ -1,4 +1,7 @@
-class ConsoleOutput {
+/**
+ * Panel used to write and clear relevant debuggable data. 
+ */
+class ConsolePanel {
 	constructor(elementId) {
 		this.consoleElement = document.querySelector(elementId + ' #console-output');
 		this.outputWindow = document.querySelector(elementId + ' #output');
@@ -6,63 +9,117 @@ class ConsoleOutput {
 		this.clearBtn.addEventListener('click', this.clear.bind(this));
 	}
 
+	/**
+	 * Writes the value and adds a line-break (<br>) at the end.
+	 * 
+	 * @param {string} val Value to write into the element.
+	 */
 	write(val) {
+		console.log(val);
 		this.outputWindow.innerHTML += val + "<br>";
 	}
 
+	/**
+	 * Clears the inner HTML.
+	 */
 	clear() {
 		this.outputWindow.innerHTML = "";
 	}
 }
 
+/**
+ * Keeps a reference of every console to easily get them when needed.
+ */
+class ConsoleManager {
+	static consoles = [];
+	constructor() {
+	}
+
+	/**
+	 * Stores a given console within the `ownerId` key.
+	 * 
+	 * @param {ConsolePanel} aConsole  console to be stored
+	 * @param {string} ownerId index key representing it's owner.
+	 */
+	static register(aConsole, ownerId) {
+		this.consoles[ownerId] = aConsole;
+	}
+
+	/**
+	 * 
+	 * @param {string} ownerId 
+	 * @returns {ConsolePanel} ConsolePanel
+	 */
+	static get(ownerId) {
+		return this.consoles[ownerId];
+	}
+
+	static search(aConsole) {
+		return this.consoles.indexOf(aConsole);
+	}
+
+	static remove(aConsole) {
+		const index = aConsole;
+		this.consoles[index] = null; 
+	}
+
+	static removeAt(ownerId) {
+		this.consoles[ownerId] = null;
+	}
+}
+
+
 function bootstrap() {
-	const consoleOutput = new ConsoleOutput('');
+	const mainConsole = new ConsolePanel('#main-console');
+	ConsoleManager.register(mainConsole, '#main-console');
 	
-	class WSClient {
-	
-		constructor(ip, endpoint) {
+
+	/**
+	 * Websocket logic code.
+	 */
+	class WSClient {	
+		constructor(ip, endpoint, ownerId = null) {
 			this.address = ip;
 			this.message = '';
+			this.endpoint = endpoint;
+			this.elementId = ownerId;
+			this.console = ownerId ? ConsoleManager.get(this.elementId) : mainConsole;
 
 			const conditionalBar = endpoint.startsWith('/') ? '' : '/';
-			const fullAddress = "ws://" + ip + ":81" + conditionalBar + endpoint;
-			
-			const connectingMsg = 'connecting to ' + fullAddress + '...';
+			this.fullAddress = "ws://" + this.address + ":81" + conditionalBar + this.endpoint;
+		}
+
+		connect() {
+			const connectingMsg = 'connecting to ' + this.fullAddress + '...';
+
+			this.console.write(connectingMsg);
+
+			this.socket = new WebSocket(this.fullAddress);
+			this.socket.addEventListener('message', this.onMessage.bind(this));
+			this.socket.addEventListener('error', this.onError.bind(this));
+			this.socket.addEventListener('open', this.onOpen.bind(this));
+		}
+
+		onMessage(ev) {
+			this.message = ev.data;
+		}
+		onError(ev) {
 			const connectionFailedMsg = 'can’t establish a connection to the server at ' + fullAddress + '...';
-
-			console.log(connectingMsg);
-			consoleOutput.write(connectingMsg);
-
-			this.socket = new WebSocket(fullAddress);
-			this.socket.onmessage = (ev) => {
-				this.message = ev.data;
-
-			}
-			this.socket.onerror = (ev) => {
-				consoleOutput.write(connectionFailedMsg);
-			}
-			this.socket.onopen = (ev) => {
-				console.log(ev);
-				consoleOutput.write('oppened connection with ' + ev.originalTarget.url);
-			}
+			this.console.write(connectionFailedMsg);
+		}
+		onOpen(ev) {
+			const connectionOppenedMsg = 'oppened connection with ' + ev.originalTarget.url;
+			this.console.write(connectionOppenedMsg);
 		}
 		
 		send(data) {
 			if(this.socket.readyState == WebSocket.OPEN) this.socket.send(data); 
 		}
-	
-		listen() {
-			return this.message;
-		}
-	}
-	
-	const InputEnum = {
-		ArrowDown: 'ArrowDown',
-		ArrowUp: 'ArrowUp'
 	}
 
-
-
+	/**
+	 * Input base abstract class, contains features that 'defines' a user input.
+	 */
 	class AInput {
 		constructor() {
 			this.input = undefined;
@@ -87,6 +144,10 @@ function bootstrap() {
 			return this.oldValue;
 		}
 	}
+
+	/**
+	 * Specific Acceleration Input class.
+	 */
 	class AccelerationInput extends AInput {
 		constructor(elementId) {
 			super();
@@ -98,6 +159,10 @@ function bootstrap() {
 			this.oldValue = this.input.value;
 		}
 	}
+
+	/**
+	 * Specific Steering Input class.
+	 */
 	class SteeringInput extends AInput {
 		constructor(elementId) {
 			super();
@@ -110,28 +175,10 @@ function bootstrap() {
 		}
 	}
 
-	class InputController {
-		constructor() {
-			this.inputs = {};
-			Object.keys(InputEnum).forEach((keyName) => {
-				this.inputs[keyName] = false; 
-			});
-	
-			document.addEventListener('keydown', (event) => {
-				if(this.inputs[event.key] !== undefined) {
-					this.inputs[event.key] = true;
-					event.preventDefault();
-				}
-			});
-			document.addEventListener('keyup', (event) => {
-				if(this.inputs[event.key] !== undefined) {
-					this.inputs[event.key] = false;
-					event.preventDefault();
-				}
-			});
-		}
-	}
-
+	/**
+	 * A GamepadController listens to connected gamepads and assigns 
+	 * the inputs to the specified DOM input field through the `update` method.
+	 */
 	class GamepadController {
 		constructor(
 			elementId,
@@ -150,6 +197,7 @@ function bootstrap() {
 			this.input = document.querySelector(elementId + ' #gamepad-enable-btn');
 			this.label = document.querySelector(elementId + ' #gamepad-enable-status-lbl');
 
+			this.console = ConsoleManager.get(elementId);
 			this.isEnabled = this.gamepad && this.input.getAttribute('data-value') == this.stateEnum.ENABLED;
 
 			this.input.addEventListener('click', this.onClick.bind(this));
@@ -169,8 +217,7 @@ function bootstrap() {
 				+ ev.gamepad.axes.length 
 				+ " axes." 
 			
-				console.log(msg);
-				consoleOutput.write(msg);
+				this.console.write(msg);
 
 				this.gamepad = ev.gamepad
 		}
@@ -184,7 +231,7 @@ function bootstrap() {
 			
 			const msg = "Gamepad is " + status;
 
-			consoleOutput.write(msg);
+			this.console.write(msg);
 
 			this.label.innerHTML = status;
 		}
@@ -203,7 +250,10 @@ function bootstrap() {
 	}
 	
 
-	
+	/**
+	 * This class represents one controller component.
+	 * TODO: This is not a `Core`, name must change.
+	 */
 	class Core {
 	
 		constructor(controllerId) {
@@ -213,6 +263,9 @@ function bootstrap() {
 
 			this.accelerationInput = new AccelerationInput(this.elementId);	
 			this.steeringInput = new SteeringInput(this.elementId);
+
+			this.consoleElement = new ConsolePanel(this.elementId);
+			ConsoleManager.register(this.consoleElement, this.elementId);
 	
 			this.connection = false;
 			this.gamepadController = new GamepadController(
@@ -224,18 +277,22 @@ function bootstrap() {
 			);
 
 			this.connectBtn = document.querySelector(this.elementId + " #connect-to-btn");
-			this.connectBtn.addEventListener('click', this.connect.bind(this));
+			this.connectBtn.addEventListener('click', this.onConnect.bind(this));
 		}
 		
-		connect() {
+		onConnect() {
 			const clientIP = document.querySelector(this.elementId + " #car-ip").value;
 			const endpoint = '';
 
 			this.connection = true;
 
-			this.client = new WSClient(clientIP, endpoint);
+			this.client = new WSClient(clientIP, endpoint, this.elementId);
+			this.client.connect();
 		}
 
+		/**
+		 * Loop method that goes inside a `setInterval` call.
+		 */
 		loop() {
 			this.gamepadController.update();
 			if(!this.connection) return;
@@ -243,13 +300,13 @@ function bootstrap() {
 			if(this.accelerationInput.HasChanged()) {
 				const accelValue = this.accelerationInput.GetValue();	
 				this.accelerationInput.SetOldValue(accelValue);
-				this.client.send("a:"+accelValue);
+				this.client.send("a:" + accelValue);
 			}
 	
 			if(this.steeringInput.HasChanged()) {
 				const steerValue = this.steeringInput.GetValue();
 				this.steeringInput.SetOldValue(steerValue);
-				this.client.send("s:"+steerValue);
+				this.client.send("s:" + steerValue);
 			}	
 		}
 	}
@@ -257,9 +314,8 @@ function bootstrap() {
 
 
 	const core = new Core(0);
-	//core.loop();
 
-	setInterval(core.loop.bind(core), 10);
+	setInterval(core.loop.bind(core), core.interval);
 }
 
 window.onload = bootstrap;
