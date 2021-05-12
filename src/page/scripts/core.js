@@ -104,7 +104,7 @@ function bootstrap() {
 			this.message = ev.data;
 		}
 		onError(ev) {
-			const connectionFailedMsg = 'can’t establish a connection to the server at ' + fullAddress + '...';
+			const connectionFailedMsg = 'can’t establish a connection to the server at ' + this.fullAddress + '...';
 			this.console.write(connectionFailedMsg);
 		}
 		onOpen(ev) {
