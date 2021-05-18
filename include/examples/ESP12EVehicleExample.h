@@ -7,14 +7,14 @@
 #include <Implementations/Servo/ServoImplementation.h>
 #include <Implementations/Wireless/WiFi/ESP8266WiFiImplementation.h>
 
+#include <Implementations/Websocket/WebsocketServerImplementation.h>
+
 #include <Translators/Servo/MG90S-DriverOnly/MG90SCustomTranslator.h>
 #include <Translators/Servo/GS1502/GS1502Translator.h>
 
 #include <Translators/Potentiometer/A50K/A50KPotentiometerTranslator.h>
 
 #include <Translators/LEDs/CommonLED.h>
-
-#include <Translators/Wireless/WIFI/ESP12ETranslator.h>
 
 #include <Translators/Debug/DebuggerTranslator.h>
 
@@ -70,14 +70,13 @@ class ESP12EVehicleExample {
 	IInputParser *directionParser;
 	IInputParser *headlightsParser;
 	
-	IWirelessCommComponent *esp12eComp;
+	IWirelessWiFiImplementation *wifiService;
+	IWebsocketImplementation *websocketService;
 
 	IServoImplementation *servoDirImpl;
 	IServoImplementation *servoVelImpl;
 
 	IControllerComponent *debugComp;
-
-	IWirelessWiFiImplementation *esp12eImpl;
 
 	SteeringController *steController;
 	AccelerationController *accelController;
@@ -120,25 +119,25 @@ class ESP12EVehicleExample {
 
 	void defineWiFIModule() {
 		const int WEBSOCKET_PORT = 81;
-		this->esp12eImpl = new ESP8266WiFiImplementation(MY_SSID, MY_PASS, WEBSOCKET_PORT);
-		this->esp12eComp = new ESP12ETranslator(this->esp12eImpl);
+		this->wifiService = new ESP8266WiFiImplementation(MY_SSID, MY_PASS);
+		this->websocketService = new WebsocketServerImplementation(WEBSOCKET_PORT);
 	}
 
 	void defineControllers(){
 		this->accelController = new AccelerationController(
 			this->servoVelComp, 			
-			this->esp12eComp,
+			this->websocketService,
 			this->accelerationParser);
 
 		this->steController = new SteeringController(			
 			this->servoDirComp, 
-			this->esp12eComp,
+			this->websocketService,
 			this->directionParser);
 
 		// this->headlightsController = new HeadLightsController(
 		// 	frontLeftHeadlightLED,
 		// 	frontRightHeadlightLED,
-		// 	this->esp12eComp,
+		// 	this->websocketService,
 		// 	this->headlightsParser
 		// );
 	}
@@ -158,7 +157,7 @@ class ESP12EVehicleExample {
 	
 	void loop()
 	{ 
-		if(this->esp12eImpl->IsConnected() != wl_status_t::WL_CONNECTED) {
+		if(this->wifiService->IsConnected() != wl_status_t::WL_CONNECTED) {
 			unsigned int currentMillis = millis();
 			uint8_t ledStatus = (this->isHigh) ? LED_ON : LED_OFF;
 
@@ -171,13 +170,13 @@ class ESP12EVehicleExample {
 			}
 		} else {
 			if(isConnected == false) {
-				isConnected = true;
-				this->esp12eImpl->WriteIP();
-				this->esp12eImpl->WebSocketConnect();
+				this->isConnected = true;
+				this->wifiService->WriteIP();
+				this->websocketService->open();
 				this->boardStatusLED->set(LED_ON);
 			}
 
-			this->esp12eComp->listen();
+			this->websocketService->listen();
 
 			this->accelController->update();
 			this->steController->update();

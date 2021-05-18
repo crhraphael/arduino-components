@@ -15,7 +15,6 @@
 
 // #include <Translators/LEDs/CommonLED.h>
 
-#include <Translators/Wireless/WIFI/ESP12ETranslator.h>
 #include <Helpers/CharIdFloatInputParser.h>
 
 // #include <Translators/Debug/DebuggerTranslator.h>
@@ -71,14 +70,14 @@ class NonClassExample {
 	// IControllableComponent *servoDirComp;
 	// IControllableComponent *servoVelComp;
 	
-	IWirelessCommComponent *esp12eComp;
+	IWirelessCommComponent *websocketService;
 
 	// IServoImplementation *servoDirImpl;
 	// IServoImplementation *servoVelImpl;
 
 	// IControllerComponent *debugComp;
 
-	IWirelessWiFiImplementation *esp12eImpl;
+	IWirelessWiFiImplementation *wifiService;
 
 	// SteeringController *steController;
 	// AccelerationController *accelController;
@@ -170,7 +169,7 @@ class NonClassExample {
 		char buff[10] = "\0";
 		char debug[10] = "\0";
 
-		this->esp12eComp->read(buff);
+		this->websocketService->read(buff);
 		this->parser->parse(buff, this->inputValue, 'a');
 
 		Serial.println(this->inputValue);
@@ -236,8 +235,8 @@ class NonClassExample {
 		int WEBSOCKET_PORT = 81;
 		this->parser = new CharIdFloatInputParser();
 
-		this->esp12eImpl = new ESP8266WiFiImplementation(MY_SSID, MY_PASS, WEBSOCKET_PORT);
-		this->esp12eComp = new ESP12ETranslator(this->esp12eImpl);
+		this->wifiService = new ESP8266WiFiImplementation(MY_SSID, MY_PASS);
+		this->websocketService = new WebsocketServerImplementation(WEBSOCKET_PORT);
 	}
 
 	public:
@@ -253,7 +252,7 @@ class NonClassExample {
 	
 	void loop()
 	{ 
-		this->esp12eComp->listen();
+		this->websocketService->listen();
 
 		this->updateVelocity();
 		//Serial.println((int)this->accelController->getCurrentAcceleration());

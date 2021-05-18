@@ -7,7 +7,6 @@
 #include <Translators/Servo/MG90S-DriverOnly/MG90SCustomTranslator.h>
 #include <Translators/Potentiometer/A50K/A50KPotentiometerTranslator.h>
 #include <Translators/LEDs/CommonLED.h>
-#include <Translators/Wireless/WIFI/ESP12ETranslator.h>
 
 #include <InputControllers/InputController.h>
 #include <InputControllers/AccelerationController.h>

@@ -6,7 +6,6 @@
 #include <Implementations/Wireless/WiFi/ESP8266WiFiImplementation.h>
 #include <Servo.h>
 
-#include <Translators/Wireless/WIFI/ESP12ETranslator.h>
 #include <Helpers/CharIdFloatInputParser.h>
 
 // Label	GPIO	  Input						Output	Notes

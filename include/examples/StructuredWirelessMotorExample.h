@@ -8,6 +8,8 @@
 #include <Implementations/Wireless/WiFi/ESP8266WiFiImplementation.h>
 #include <Servo.h>
 
+#include <Implementations/Websocket/WebsocketServerImplementation.h>
+
 // #include <Translators/Servo/MG90S-DriverOnly/MG90SCustomTranslator.h>
 // #include <Translators/Servo/GS1502/GS1502Translator.h>
 
@@ -15,7 +17,6 @@
 
 // #include <Translators/LEDs/CommonLED.h>
 
-#include <Translators/Wireless/WIFI/ESP12ETranslator.h>
 #include <Helpers/CharIdFloatInputParser.h>
 
 // #include <Translators/Debug/DebuggerTranslator.h>
@@ -68,8 +69,8 @@ int DEFAULT_BAULD_RATE = 9600;
  * using a wifi module.
  **/
 class StructuredWirelessMotorExample {
-	IWirelessCommComponent *esp12eComp;
-	IWirelessWiFiImplementation *esp12eImpl;
+	IWirelessCommComponent *websocketService;
+	IWirelessWiFiImplementation *wifiService;
 
 	public:
 	StructuredWirelessMotorExample() {
@@ -158,7 +159,7 @@ class StructuredWirelessMotorExample {
 		char buff[10] = "\0";
 		char debug[10] = "\0";
 
-		this->esp12eComp->read(buff);
+		this->websocketService->read(buff);
 		this->parser->parse(buff, this->inputValue, 'a');
 
 		set(this->inputValue);
@@ -204,8 +205,8 @@ class StructuredWirelessMotorExample {
 		int WEBSOCKET_PORT = 81;
 		this->parser = new CharIdFloatInputParser();
 
-		this->esp12eImpl = new ESP8266WiFiImplementation(MY_SSID, MY_PASS, WEBSOCKET_PORT);
-		this->esp12eComp = new ESP12ETranslator(this->esp12eImpl);
+		this->wifiService = new ESP8266WiFiImplementation(MY_SSID, MY_PASS);
+		this->websocketService = new WebsocketServerImplementation(WEBSOCKET_PORT);
 	}
 
 	public:
@@ -221,7 +222,7 @@ class StructuredWirelessMotorExample {
 	
 	void loop()
 	{ 
-		this->esp12eComp->listen();
+		this->websocketService->listen();
 		this->updateVelocity();
 	} 
 };

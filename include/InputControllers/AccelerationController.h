@@ -65,7 +65,7 @@ class AccelerationController {
 	}
 
 	void update() {
-		char buff[10] = "\0";
+		char buff[10] = "\000000000";
 
 		this->controllerComponent->read(buff);
 		this->inputParser->parse(buff, this->inputValue, 'a');

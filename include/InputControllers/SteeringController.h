@@ -63,7 +63,7 @@ class SteeringController {
 	}
 
 	void update() {
-		char buff[10] = "\00000000";
+		char buff[10] = "\000000000";
 
 		this->controllerComponent->read(buff);
 		this->inputParser->parse(buff, this->inputValue, 's');
