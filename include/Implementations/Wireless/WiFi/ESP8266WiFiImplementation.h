@@ -46,7 +46,7 @@ class ESP8266WiFiImplementation: public IWirelessWiFiImplementation {
 		this->wifiImpl.begin(ssid, password);
 	}
 
-	public: wl_status_t IsConnected() {
+	public: wl_status_t GetStatus() {
 		return this->wifiImpl.status();
 	}
 

@@ -71,8 +71,6 @@ class RemoteHeadlightsExample {
 	HeadLightsController *headlightsController;
 	
 	CommonLED *boardStatusLED;	
-	bool isHigh = true;
-
 	CommonLED *frontLeftHeadlightLED;
 	CommonLED *frontRightHeadlightLED;
 
@@ -106,38 +104,24 @@ class RemoteHeadlightsExample {
 		this->defineControllers();
 
 	} 
-	bool isConnected = false;	
 	
 	unsigned int lastMillis = 0;
 	const unsigned int interv = 500;
 	
 	void loop()
 	{ 
-		if(this->wifiService->IsConnected() != wl_status_t::WL_CONNECTED) {
-			unsigned int currentMillis = millis();
-			uint8_t ledStatus = (this->isHigh) ? LED_ON : LED_OFF;
-
-
-			this->boardStatusLED->set(ledStatus);
-
-			if(currentMillis - lastMillis > interv) {
-				this->isHigh = !this->isHigh;
-				lastMillis = currentMillis;
-			}
-		} else {
-			if(isConnected == false) {
-				isConnected = true;
-				this->wifiService->WriteIP();
-
-				this->boardStatusLED->set(LED_ON);
-			}
-
-			this->websocketService->listen();
-
-			this->headlightsController->update();
+		if(this->wifiService->GetStatus() != wl_status_t::WL_CONNECTED) {
+			this->boardStatusLED->blink(this->interv);
+			return;
 		}
-
-
+		if(!this->websocketService->IsOpen()) {
+			this->wifiService->WriteIP();
+			this->websocketService->open();
+			return;
+		}
+		this->boardStatusLED->set(LED_ON);
+		this->websocketService->listen();
+		this->headlightsController->update();
 	} 
 };
 

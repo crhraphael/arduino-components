@@ -57,6 +57,10 @@ class MG90SCustomTranslator: public IArduinoComponent, public IControllableCompo
   int translate(float accelCap) {
 		return (int)(this->SERVO_STOPPED_VALUE + ((float)MG90SCustomTranslator::MAX_ACCELERATION * accelCap));
 	}
+
+	int get() {
+		return valueToSend;
+	}
   void set(float vel) {
 		valueToSend = this->translate(vel);
 

@@ -12,6 +12,11 @@ class IWebsocketImplementation : public IWirelessCommComponent
   virtual void listen() = 0;
 	virtual void send (char *message) = 0;
 	virtual void open() = 0;
+	virtual void close();
+
+	virtual bool IsOpen() = 0;
+	virtual bool HasClientsConnected() = 0;
+
 };
 
 IWebsocketImplementation::~IWebsocketImplementation() {};

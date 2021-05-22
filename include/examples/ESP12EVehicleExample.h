@@ -83,9 +83,8 @@ class ESP12EVehicleExample {
 	HeadLightsController *headlightsController;
 	
 	CommonLED *boardStatusLED;	
-	bool isHigh = true;
 
-	bool isConnected = false;	
+	bool isWebsocketOpen = false;	
 
 	unsigned int lastMillis = 0;
 	const unsigned int interv = 500;
@@ -157,33 +156,24 @@ class ESP12EVehicleExample {
 	
 	void loop()
 	{ 
-		if(this->wifiService->IsConnected() != wl_status_t::WL_CONNECTED) {
-			unsigned int currentMillis = millis();
-			uint8_t ledStatus = (this->isHigh) ? LED_ON : LED_OFF;
-
-
-			this->boardStatusLED->set(ledStatus);
-
-			if(currentMillis - lastMillis > interv) {
-				this->isHigh = !this->isHigh;
-				lastMillis = currentMillis;
-			}
-		} else {
-			if(isConnected == false) {
-				this->isConnected = true;
-				this->wifiService->WriteIP();
-				this->websocketService->open();
-				this->boardStatusLED->set(LED_ON);
-			}
-
-			this->websocketService->listen();
-
-			this->accelController->update();
-			this->steController->update();
-
-			// this->headlightsController->update();
+		if(this->wifiService->GetStatus() != wl_status_t::WL_CONNECTED) {
+			this->boardStatusLED->blink(this->interv);
+			return;
 		}
-	} 
+		if(!this->websocketService->IsOpen()) {
+			this->wifiService->WriteIP();
+			this->websocketService->open();
+			return;
+		}
+
+		this->boardStatusLED->set(LED_ON);
+		this->websocketService->listen();
+		this->accelController->update();
+		this->steController->update();
+
+		// this->headlightsController->update();
+
+	}
 };
 
 #endif

@@ -7,6 +7,8 @@ class WebsocketServerImplementation:
 {
   private:
 	WebSocketsServer webSocket;
+	bool isOpen = false;
+	bool hasClientsConnected = false;
 	unsigned int bufferLength = 10;
 	char *buffer = '\0';
 
@@ -21,7 +23,16 @@ class WebsocketServerImplementation:
 		this->buffer = new char[bufferLength]();
 	}
 
+	bool IsOpen() {
+		return this->isOpen;
+	}
+
+	bool HasClientsConnected() {
+		return this->hasClientsConnected;
+	}
+
 	void open() {
+		this->isOpen = true;
 		this->webSocket.begin();
 		this->webSocket.onEvent(
 			std::bind(
@@ -33,6 +44,10 @@ class WebsocketServerImplementation:
 				std::placeholders::_4));
 	}
 
+	void close() {
+		this->webSocket.close();
+		this->isOpen = false;
+	}
 
 	void listen(char *buff) {}
 	void listen() {
@@ -65,12 +80,14 @@ class WebsocketServerImplementation:
 			case WStype_DISCONNECTED:
 				{
 					strcpy(this->buffer, "");
+					this->hasClientsConnected = false;
 				}
 				break;	
 			case WStype_CONNECTED:
 				{ 
 					IPAddress ip = this->webSocket.remoteIP(num);
 					Serial.println(ip);
+					this->hasClientsConnected = true;
 				}
 				break;	
 			case WStype_TEXT:

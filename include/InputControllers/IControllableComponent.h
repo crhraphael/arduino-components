@@ -5,6 +5,7 @@ class IControllableComponent {
 	private:
 	public:
   virtual void set(float vel) = 0;
+  virtual int get() = 0;
 	virtual void setRaw(int vel) = 0;
 	virtual int getMaxAcceleration() = 0; 
 
