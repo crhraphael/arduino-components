@@ -49,7 +49,7 @@ class RadioHeadRFImplementation: public IWirelessRFImplementation, public RH_ASK
 		}
 	}
 
-	void send(char *message)
+	void send(const char *message)
 	{
 		uint8_t* msg = (uint8_t *)message;
 		bool hasSent = this->driver.send(msg, strlen(message));

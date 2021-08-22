@@ -11,6 +11,7 @@ class WebsocketServerImplementation:
 	bool hasClientsConnected = false;
 	unsigned int bufferLength = 10;
 	char *buffer = '\0';
+	uint8_t clientNumber = 0;
 
 	public:
 	WebsocketServerImplementation(
@@ -55,22 +56,16 @@ class WebsocketServerImplementation:
 	}
 	
 	void read(char *buff) {
-		const char *msg = this->buffer;//"error: class is not listening. Did you called listen?";
-		// (!this->isListening)
-		// 	? "error: class is not listening. Did you called listen?"
-		// 	: this->buffer;
-
-		// Serial.println(msg);
+		const char *msg = this->buffer;
 		strcpy(buffer, msg);
 	}
 
 
-	void send(char *message)
-	{
-		this->webSocket.sendTXT(0, message);
+	void send(const char *message) {
+		this->webSocket.sendTXT(this->clientNumber, message);
 	}
 
-		void webSocketEvent(
+	void webSocketEvent(
 		uint8_t num, 
 		WStype_t type, 
 		uint8_t * payload, 
@@ -87,6 +82,7 @@ class WebsocketServerImplementation:
 				{ 
 					IPAddress ip = this->webSocket.remoteIP(num);
 					Serial.println(ip);
+					this->clientNumber = num;
 					this->hasClientsConnected = true;
 				}
 				break;	
