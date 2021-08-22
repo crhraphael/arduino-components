@@ -42,7 +42,7 @@ class InputController {
 	}
 
 	void update() {
-		this->accelController->update();
+		//this->accelController->update();
 	}
 };
 

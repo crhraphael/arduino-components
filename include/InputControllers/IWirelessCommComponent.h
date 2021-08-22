@@ -10,7 +10,7 @@ class IWirelessCommComponent: public IControllerComponent {
 	virtual void listen(char *buff) = 0;
 	virtual void listen() = 0;
 	virtual void read(char *buff) = 0;
-	virtual void send(char *msg) = 0;
+	virtual void send(const char *msg) = 0;
 };
 IWirelessCommComponent::~IWirelessCommComponent() {};
 
