@@ -43,6 +43,7 @@ class ESP8266WiFiImplementation: public IWirelessWiFiImplementation {
 		const char *ssid, 
 		const char *password
 	) {
+		this->wifiImpl.setSleepMode(WIFI_NONE_SLEEP);
 		this->wifiImpl.begin(ssid, password);
 	}
 
