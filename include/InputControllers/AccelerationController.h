@@ -17,7 +17,6 @@
 class AccelerationController {
 	private:
 	IControllableComponent *controllableComponent;
-	IControllerComponent *controllerComponent;
 	IInputParser *inputParser;
 
   int neutralPointValue = 0;
@@ -33,14 +32,12 @@ class AccelerationController {
 	public:
 	AccelerationController(
 		IControllableComponent *controllableComponent,
-		IControllerComponent *controllerComponent,
 		IInputParser *inputParser
 	):
 	RIGHT(-1),
 	LEFT(1)
 	{
 		this->controllableComponent = controllableComponent;
-		this->controllerComponent = controllerComponent;
 		this->neutralPointValue = this->controllableComponent->getServoNeutralValue();
 		this->inputParser = inputParser;
 		this->inputValue = 0;
@@ -64,27 +61,13 @@ class AccelerationController {
 		this->reverse = dir;
 	}
 
-	void update() {
+	void update(IControllerComponent* controller) {
 		char buff[10] = "\000000000";
 
-		this->controllerComponent->read(buff);
+		controller->read(buff);
 		this->inputParser->parse(buff, this->inputValue, 'a');
 
 		this->controllableComponent->set(this->inputValue);
-
-		// this->configureDirection();
-		// this->translateAcceleration();
-		// Serial.print("reverse");
-		// Serial.println(this->reverse);
-		// Serial.print("currentAcceleration");
-		// Serial.println(this->currentAcceleration);
-		// Serial.print("*");
-		// Serial.println(this->reverse * this->currentAcceleration);
-		// int i = 0;
-		// for(i = 0; i < 2000; i+=100) {
-		// 	this->controllableComponent->setRaw(i);
-		// 	delay(1000);
-		// }
 	}
 
 	float getCurrentAcceleration() {

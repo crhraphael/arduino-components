@@ -17,7 +17,6 @@
 class SteeringController {
 	private:
 	IControllableComponent *controllableComponent;
-	IControllerComponent *controllerComponent;
 	IInputParser *inputParser;
   int neutralPointValue = 0;
 	int neutralPointSensitivity = 1;
@@ -31,14 +30,12 @@ class SteeringController {
 	public:
 	SteeringController(
 		IControllableComponent *controllableComponent,
-		IControllerComponent *controllerComponent,
 		IInputParser *inputParser
 	):
 	RIGHT(-1),
 	LEFT(1)
 	{
 		this->controllableComponent = controllableComponent;
-		this->controllerComponent = controllerComponent;
 		this->neutralPointValue = this->controllableComponent->getServoNeutralValue();
 		this->inputParser = inputParser;
 		this->inputValue = 0;
@@ -62,10 +59,10 @@ class SteeringController {
 		return dir;
 	}
 
-	void update() {
+	void update(IControllerComponent* controller) {
 		char buff[10] = "\000000000";
 
-		this->controllerComponent->read(buff);
+		controller->read(buff);
 		this->inputParser->parse(buff, this->inputValue, 's');
 
 		this->currentPosition = this->inputValue;

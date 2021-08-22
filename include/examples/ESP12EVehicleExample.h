@@ -56,6 +56,9 @@ const int LED_PIN = LED_BUILTIN | 2;
 
 const int DEFAULT_BAULD_RATE = 9600;
 
+// Interval in milliseconds
+const unsigned int interv = 500;
+
 /**
  * Experiment using an ESP32 Lolin v3 as prototype board
  * 
@@ -83,11 +86,6 @@ class ESP12EVehicleExample {
 	HeadLightsController *headlightsController;
 	
 	CommonLED *boardStatusLED;	
-
-	bool isWebsocketOpen = false;	
-
-	unsigned int lastMillis = 0;
-	const unsigned int interv = 500;
 
 	CommonLED *frontLeftHeadlightLED;
 	CommonLED *frontRightHeadlightLED;
@@ -125,13 +123,13 @@ class ESP12EVehicleExample {
 	void defineControllers(){
 		this->accelController = new AccelerationController(
 			this->servoVelComp, 			
-			this->websocketService,
-			this->accelerationParser);
+			this->accelerationParser
+		);
 
 		this->steController = new SteeringController(			
 			this->servoDirComp, 
-			this->websocketService,
-			this->directionParser);
+			this->directionParser
+		);
 
 		// this->headlightsController = new HeadLightsController(
 		// 	frontLeftHeadlightLED,
@@ -154,22 +152,31 @@ class ESP12EVehicleExample {
 
 	}
 	
+	bool hasSentCarInfo = false;
+
+	const char* vehicleInfo = "{\"type\":'car-info',\"title\":'John',\"year\":'1000'}";
 	void loop()
 	{ 
 		if(this->wifiService->GetStatus() != wl_status_t::WL_CONNECTED) {
-			this->boardStatusLED->blink(this->interv);
+			this->boardStatusLED->blink(250);
 			return;
 		}
 		if(!this->websocketService->IsOpen()) {
+			this->boardStatusLED->blink(500);
 			this->wifiService->WriteIP();
 			this->websocketService->open();
 			return;
 		}
 
-		this->boardStatusLED->set(LED_ON);
+		if(this->websocketService->HasClientsConnected() && !this->hasSentCarInfo) {
+			this->websocketService->send(vehicleInfo);
+			this->hasSentCarInfo = true;
+			this->boardStatusLED->set(LED_ON);
+		}
+
 		this->websocketService->listen();
-		this->accelController->update();
-		this->steController->update();
+		this->accelController->update(this->websocketService);
+		this->steController->update(this->websocketService);
 
 		// this->headlightsController->update();
 
