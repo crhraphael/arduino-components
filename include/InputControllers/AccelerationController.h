@@ -1,6 +1,8 @@
 #ifndef ACCELERATIONCONTROLLER
 #define ACCELERATIONCONTROLLER
 
+#define ACCELERATION_FLAG 'a'
+
 #include <Helpers/IInputParser.h>
 #include <Translators/Servo/MG90S-DriverOnly/MG90SCustomTranslator.h>
 #include <Translators/Potentiometer/IPotentiometerInputTranslator.h>
@@ -28,7 +30,7 @@ class AccelerationController {
 	float inputValue = 0.0f;
 
 
-	
+
 	public:
 	AccelerationController(
 		IControllableComponent *controllableComponent,
@@ -63,9 +65,8 @@ class AccelerationController {
 
 	void update(IControllerComponent* controller) {
 		char buff[10] = "\000000000";
-
 		controller->read(buff);
-		this->inputParser->parse(buff, this->inputValue, 'a');
+		this->inputParser->parse(buff, this->inputValue, ACCELERATION_FLAG);
 
 		this->controllableComponent->set(this->inputValue);
 	}
