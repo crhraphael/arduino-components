@@ -12,10 +12,18 @@ A fully functional code library with many implementations of electronic componen
 * [DISCLAIMER](#disclaimer)
 * [EMOJIS](#emojis)
 * [INSTALLING](#installing)
-* [RUNNING](#running)
+* [UPLOAD](#running)
 * [TESTS](#tests)
-* [ENVIRONMENT VARIABLES](#variaveis-de-ambiente)
-* [COMMANDLINE](#guia-de-comandos)
+* [ENVIRONMENT VARIABLES](#environment-variables)
+* [COMMANDLINE](#commandline)
+
+# REQUIREMENTS 
+[goto index](#index)
+
+VSCODE - https://code.visualstudio.com/
+
+PlatformIO - https://marketplace.visualstudio.com/items?itemName=platformio.platformio-ide
+
 
 # DESCRIPTION 
 [goto index](#index)
@@ -63,15 +71,27 @@ Since this project does not target a specific project/purpose, many examples can
 
 
 ## INSTALLING
+[goto index](#index)
 
+After downloading and installing all requirements, the only step left is to build and download the PlatformIO requirements defined on the .ini file.
 
-## RUNNING
+## UPLOAD
+[goto index](#index)
 
+Follow PlatformIO tutorials (remember to select the correct environment variable for each programming board/microchip).
 
 ## TESTS
+[goto index](#index)
 
 
 ## ENVIRONMENT VARIABLES
+[goto index](#index)
 
+|name|desc.|
+|---|---|
+|uno|For Arduino UNO boards.|
+|esp12e|For ESP12E boards.|
+|nodemcu|For NodeMCU boards.|
 
 ## COMMANDLINE
+[goto index](#index)
