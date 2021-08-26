@@ -34,6 +34,7 @@ class GS1502Translator: public IArduinoComponent, public IControllableComponent 
 		SERVO_STOPPED_VALUE(neutralValue)
 	{
 		this->servoImpl = servoImpl;		
+		this->set(0);
 		valueToSend = SERVO_STOPPED_VALUE;
 		lastValueSent = valueToSend;
 	};

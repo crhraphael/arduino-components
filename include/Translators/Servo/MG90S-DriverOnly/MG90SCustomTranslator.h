@@ -41,6 +41,7 @@ class MG90SCustomTranslator: public IArduinoComponent, public IControllableCompo
 		SERVO_STOPPED_VALUE(neutralValue)
 	{
 		this->servoImpl = servoImpl;
+		this->set(0);
 		valueToSend = SERVO_STOPPED_VALUE;
 		lastValueSent = valueToSend;
 	};
