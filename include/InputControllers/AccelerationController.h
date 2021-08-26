@@ -71,6 +71,15 @@ class AccelerationController {
 		this->controllableComponent->set(this->inputValue);
 	}
 
+	/**
+	 * Forces a specific value to the controllable component.
+	 * It also updates the loop input with the same value.
+	 **/
+	void setSpeed(float speed) {
+		this->inputValue = speed;
+		this->controllableComponent->set(speed);
+	}
+
 	float getCurrentAcceleration() {
 		return this->currentAcceleration;
 	}

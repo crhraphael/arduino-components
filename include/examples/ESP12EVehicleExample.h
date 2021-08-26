@@ -157,16 +157,27 @@ class ESP12EVehicleExample {
 	bool hasSentCarInfo = false;
 
 	const char* vehicleInfo = "{\"type\":'car-info',\"title\":'John',\"year\":'1000'}";
+
+	/**
+	 * Resets controllables to a default value.
+	 **/
+	void resetControllables() {
+		this->accelController->setSpeed(0);
+		this->steController->setSpeed(0);
+	}
+
 	void loop()
 	{ 
 		if(this->wifiService->GetStatus() != wl_status_t::WL_CONNECTED) {
 			this->boardStatusLED->blink(250);
+			this->resetControllables();
 			return;
 		}
 		if(!this->websocketService->IsOpen()) {
 			this->boardStatusLED->blink(500);
 			this->wifiService->WriteIP();
 			this->websocketService->open();
+			this->resetControllables();
 			return;
 		}
 
