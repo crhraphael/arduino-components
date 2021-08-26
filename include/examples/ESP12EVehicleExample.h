@@ -97,15 +97,17 @@ class ESP12EVehicleExample {
 		this->servoDirComp = new GS1502Translator(
 			this->servoDirImpl, 
 			maxIncrement, 
-			neutralValue);
+			neutralValue
+		);
 
 		const int maxIncrementAccellServo = 14;
-		const int neutralValueAccellServo = 86;
+		const int neutralValueAccellServo = 87;
 		this->servoVelImpl = new ServoImplementation(SERVO_ACCELERATION_PIN);
 		this->servoVelComp = new MG90SCustomTranslator(
 			this->servoVelImpl, 
 			maxIncrementAccellServo, 
-			neutralValueAccellServo);
+			neutralValueAccellServo
+		);
 	}
 
 	void defineInputParsers() {

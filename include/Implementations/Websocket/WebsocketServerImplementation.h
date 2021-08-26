@@ -57,7 +57,7 @@ class WebsocketServerImplementation:
 	
 	void read(char *buff) {
 		const char *msg = this->buffer;
-		strcpy(buffer, msg);
+		strcpy(buff, msg);
 	}
 
 
