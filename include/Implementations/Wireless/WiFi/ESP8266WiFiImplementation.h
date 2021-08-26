@@ -25,8 +25,6 @@ class ESP8266WiFiImplementation: public IWirelessWiFiImplementation {
 	bool isListening = false;
 	ESP8266WiFiClass wifiImpl;
 
-	unsigned int bufferLength = 10;
-
 	public:
 	ESP8266WiFiImplementation(
 		const char *ssid, 
