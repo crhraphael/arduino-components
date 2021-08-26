@@ -146,7 +146,7 @@ class ESP12EVehicleExample {
 	{ 
 		Serial.begin(DEFAULT_BAULD_RATE);
 		this->boardStatusLED = new CommonLED(LED_PIN);
-
+		this->boardStatusLED->set(LED_OFF);
 		this->defineServoDevices();
 		this->defineInputParsers();
 		this->defineWiFIModule();
@@ -180,14 +180,22 @@ class ESP12EVehicleExample {
 			this->resetControllables();
 			return;
 		}
+		
+		this->websocketService->listen();
 
-		if(this->websocketService->HasClientsConnected() && !this->hasSentCarInfo) {
+		if(!this->websocketService->HasClientsConnected()) {
+			this->boardStatusLED->blink(1000);
+			this->resetControllables();
+			return;
+		} 
+
+		if(!this->hasSentCarInfo) {
 			this->websocketService->send(vehicleInfo);
 			this->hasSentCarInfo = true;
 			this->boardStatusLED->set(LED_ON);
 		}
 
-		this->websocketService->listen();
+
 		this->accelController->update(this->websocketService);
 		this->steController->update(this->websocketService);
 
