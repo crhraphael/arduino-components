@@ -10,18 +10,18 @@ class WebsocketServerImplementation:
 	bool isOpen = false;
 	bool hasClientsConnected = false;
 	unsigned int bufferLength = 10;
-	char *buffer = '\0';
+	char buffer[10];
 	uint8_t clientNumber = 0;
 
 	public:
 	WebsocketServerImplementation(
 		const int websocketPort,
 		unsigned int bufferLength = 10
-	)
-
-	:	webSocket(websocketPort) {
+	)	:	
+		webSocket(websocketPort) 
+	{
 		this->bufferLength = bufferLength;
-		this->buffer = new char[bufferLength]();
+		this->buffer[0] = '\0';
 	}
 
 	bool IsOpen() {
@@ -81,6 +81,7 @@ class WebsocketServerImplementation:
 			case WStype_CONNECTED:
 				{ 
 					IPAddress ip = this->webSocket.remoteIP(num);
+					Serial.print("Client connected: ");
 					Serial.println(ip);
 					this->clientNumber = num;
 					this->hasClientsConnected = true;
