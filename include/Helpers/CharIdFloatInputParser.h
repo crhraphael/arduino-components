@@ -7,6 +7,7 @@
 class CharIdFloatInputParser : public IInputParser {
   private:
 	char debug[10] = "\0";
+	float lastValidValue = .0f;
 
   public:
 	void parse(char *buff, char result[4], char flagToCompare) {
@@ -22,6 +23,9 @@ class CharIdFloatInputParser : public IInputParser {
 				getSubString(buff, target, 2, lenght);
 				float value = atof(target);
 				result = value;
+				lastValidValue = value;
+			} else {
+				result = lastValidValue;
 			}
 		}
 	}
