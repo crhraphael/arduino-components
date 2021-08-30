@@ -66,7 +66,7 @@ class MG90SCustomTranslator: public IArduinoComponent, public IControllableCompo
 		valueToSend = this->translate(vel);
 
 		if(valueToSend != lastValueSent) {
-			Serial.println(valueToSend);
+			// Serial.println(valueToSend);
 		}
 		this->servoImpl->send(valueToSend);
 		lastValueSent = valueToSend;
