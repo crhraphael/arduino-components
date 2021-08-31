@@ -47,14 +47,13 @@ And I made a non OOP example with ease just by copying and pasting the OOP ones,
 As this repository grows, many new components will be added and later surely it will need some reorganizing.
 If you know how those components works, you can build the circuit by yourself.
 
-`example classes` are the entry point, containing the whole logic to be ran for each example.
-Pins are always defined inside the `example classes` for the simplicity of readability.
+`example classes` are the place to put your own code, it is just for organization purposes.
+- Pins are always defined inside the `example classes` for the simplicity of readability.
+- All examples are instantiated into the `main.cpp` file.
 
-All examples are instantiated into the `main.cpp` file.
+`implementations` combines a specific library/logic to work with a component or feature of the board.
 
-`implementations` are generic forms of a component/feature present on the circuit.
-
-`translators` are specific components, with logic to operate them correctly.
+`translators` translates a real component and it's behaviour to code.
 
 `helpers` contains code that does not belong to a specific scenario yet, most of it should be moved to specific folders within time.
 
