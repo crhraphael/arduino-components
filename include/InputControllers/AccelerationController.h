@@ -29,6 +29,11 @@ class AccelerationController {
 	int reverse = -1;
 	float inputValue = 0.0f;
 
+	// Constant car motor power.
+	float motorPower = .4f;
+	float gearMod = 0.0f;
+	float currentVelocity = .0f;
+
 
 
 	public:
@@ -65,10 +70,48 @@ class AccelerationController {
 
 	void update(IControllerComponent* controller) {
 		char buff[10] = "\000000000";
+		float currentInput = .0f;
 		controller->read(buff);
-		this->inputParser->parse(buff, this->inputValue, ACCELERATION_FLAG);
+		this->inputParser->parse(buff, currentInput, ACCELERATION_FLAG);
 
-		this->controllableComponent->set(this->inputValue);
+		float maxVel = currentInput;
+
+		if(this->currentVelocity <= 0) {
+			gearMod = .004f;
+		} else if(this->currentVelocity > 0 && this->currentVelocity < 0.15f) {
+			gearMod = .000045f;
+		} else if(this->currentVelocity >= 0.15f && this->currentVelocity < 0.3f) {
+			gearMod = .00005f;
+		} else if(this->currentVelocity >= 0.3f && this->currentVelocity < 0.5f) {
+			gearMod = .00001f;
+		} else if(this->currentVelocity >= 0.5f && this->currentVelocity < 0.75f) {
+			gearMod = .000005f;
+		} else if(this->currentVelocity >= 0.75f && this->currentVelocity <= 1.0f) {
+			gearMod = .000001f;
+		}
+
+		// unsigned int currentMillis = millis();
+		// unsigned int lastMillis = currentMillis; // State Stored
+		// unsigned int lastFrameMillis = currentMillis - lastMillis;
+
+		if(currentInput == 0) {
+			if(this->currentVelocity > 0) this->currentVelocity -= 0.0002f;
+			if(this->currentVelocity < 0) this->currentVelocity += 0.0002f;
+		} else {
+			float acceleration = currentInput * (motorPower * gearMod);
+			this->currentVelocity += acceleration;
+		}
+
+
+
+		// Keeps the maximum velocity between -1 and 1.
+		if(this->currentVelocity >= 1) this->currentVelocity = 1;
+		if(this->currentVelocity <= -1) this->currentVelocity = -1;
+		
+		if(this->currentVelocity > maxVel) this->currentVelocity = maxVel;
+
+
+		this->controllableComponent->set(this->currentVelocity);
 	}
 
 	/**
@@ -86,3 +129,12 @@ class AccelerationController {
 };
 
 #endif
+
+// class Gearbox {
+// 	Gear gears[];
+// 	int currentGear = 0;
+// };
+
+// class Gear {
+// 	float modifier;
+// };
