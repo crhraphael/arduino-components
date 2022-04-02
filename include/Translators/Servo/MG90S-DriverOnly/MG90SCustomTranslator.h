@@ -9,8 +9,8 @@
  * Tradutor de dados customizado do Servo MG90S da `Tower Pro`.
  * 
  * Aplicacao em projetos onde o potenciometro dentro do 
- * servo não é usado/alterado com a rotacao do motor, mantendo assim 
- * apenas a funcionalidade do driver de motor do conjunto.
+ * conjunto não é usado/alterado com a rotacao do motor, 
+ * mantendo a velocidade do motor constante.
  * 
  * See: https://www.towerpro.com.tw/product/mg90s-3/
  */
