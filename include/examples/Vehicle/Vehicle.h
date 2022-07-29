@@ -21,6 +21,12 @@ class Vehicle {
 
 	CommonLED* commonLED;
 
+
+	char title[25] = "Custom Ford Maverick";
+	char year[5] = "2019";
+
+
+
 	int frontLeftHeadlightLED;
 	int frontRightHeadlightLED;
 
@@ -35,8 +41,13 @@ class Vehicle {
 	bool isEngineOn = false;
 
 	public:
-	Vehicle(IControllableComponent* accelerationMotor) {
+	Vehicle(
+		IControllableComponent* accelerationMotor,
+		IControllableComponent* steeringMotor
+	) {
 		this->accelerationMotor = accelerationMotor;
+		this->steeringMotor = steeringMotor;
+		
 		this->commonLED = new CommonLED(1);
 		this->commonLED->set(HIGH);
 	}
