@@ -58,23 +58,19 @@ class GS1502Translator: public IArduinoComponent, public IControllableComponent 
 	}
 
 	void set(float vel) {
-		valueToSend = this->translate(vel);
+		this->valueToSend = this->translate(vel);
 
-		if(valueToSend != lastValueSent) {
-			// Serial.println(valueToSend);
-		}
-		this->servoImpl->send(valueToSend);
-		lastValueSent = valueToSend;
+
+		this->servoImpl->send(this->valueToSend);
+		lastValueSent = this->valueToSend;
 	}
 
 	void setRaw(int vel) {
-		valueToSend = (vel);
+		this->valueToSend = (vel);
 
-		if(valueToSend != lastValueSent) {
-			Serial.println(valueToSend);
-		}
-		this->servoImpl->send(valueToSend);
-		lastValueSent = valueToSend;
+
+		this->servoImpl->send(this->valueToSend);
+		lastValueSent = this->valueToSend;
 	}
 };
 
