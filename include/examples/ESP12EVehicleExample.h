@@ -6,25 +6,24 @@
 
 #include <Implementations/Servo/ServoImplementation.h>
 #include <Implementations/Wireless/WiFi/ESP8266WiFiImplementation.h>
-
 #include <Implementations/Websocket/WebsocketServerImplementation.h>
-
-#include <Translators/Servo/MG90S-DriverOnly/MG90SCustomTranslator.h>
-#include <Translators/Servo/GS1502/GS1502Translator.h>
-
-#include <Translators/Potentiometer/A50K/A50KPotentiometerTranslator.h>
-
-#include <Translators/LEDs/CommonLED.h>
-
-#include <Translators/Debug/DebuggerTranslator.h>
 
 #include <InputControllers/InputController.h>
 #include <InputControllers/AccelerationController.h>
 #include <InputControllers/SteeringController.h>
+#include <InputControllers/HeadLightsController.h>
+
+#include <Translators/Debug/DebuggerTranslator.h>
+#include <Translators/LEDs/CommonLED.h>
+#include <Translators/Servo/MG90S-DriverOnly/MG90SCustomTranslator.h>
+#include <Translators/Servo/GS1502/GS1502Translator.h>
+#include <Translators/Potentiometer/A50K/A50KPotentiometerTranslator.h>
 #include <Translators/LEDs/CommonLED.h>
 
 #include <Helpers/CharIdFloatInputParser.h>
 #include <Helpers/HeadlightInputParser.h>
+
+// #include <States/IState.h>
 
 
 #ifndef WIFICREDENTIALS
@@ -66,6 +65,7 @@ const unsigned int interv = 500;
  * using a wifi module.
  **/
 class ESP12EVehicleExample {
+	public:
 	IControllableComponent *servoDirComp;
 	IControllableComponent *servoVelComp;
 
@@ -92,8 +92,8 @@ class ESP12EVehicleExample {
 
 	void defineServoDevices() {
 		this->servoDirImpl = new ServoImplementation(SERVO_DIRECTION_PIN);
-		const int maxIncrement = 42;
-		const int neutralValue = 107;
+		const int maxIncrement = 45;
+		const int neutralValue = 100;
 		this->servoDirComp = new GS1502Translator(
 			this->servoDirImpl, 
 			maxIncrement, 
@@ -101,7 +101,7 @@ class ESP12EVehicleExample {
 		);
 
 		const int maxIncrementAccellServo = 14;
-		const int neutralValueAccellServo = 87;
+		const int neutralValueAccellServo = 88;
 		this->servoVelImpl = new ServoImplementation(SERVO_ACCELERATION_PIN);
 		this->servoVelComp = new MG90SCustomTranslator(
 			this->servoVelImpl, 
@@ -141,7 +141,6 @@ class ESP12EVehicleExample {
 		// );
 	}
 
-	public:
 	void setup() 
 	{ 
 		Serial.begin(DEFAULT_BAULD_RATE);
@@ -166,6 +165,8 @@ class ESP12EVehicleExample {
 		this->steController->setSpeed(0);
 	}
 
+	// IState* currentState;
+
 	void loop()
 	{ 
 		if(this->wifiService->GetStatus() != wl_status_t::WL_CONNECTED) {
@@ -179,9 +180,9 @@ class ESP12EVehicleExample {
 			this->websocketService->open();
 			this->resetControllables();
 			return;
-		}
-		
-		this->websocketService->listen();
+		} else {
+			this->websocketService->listen();
+		}		
 
 		if(!this->websocketService->HasClientsConnected()) {
 			this->boardStatusLED->blink(1000);
@@ -197,7 +198,7 @@ class ESP12EVehicleExample {
 
 
 		this->accelController->update(this->websocketService);
-		this->steController->update(this->websocketService);
+		// this->steController->update(this->websocketService);
 
 		// this->headlightsController->update();
 
