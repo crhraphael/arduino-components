@@ -3,26 +3,12 @@
 
 #include <Arduino.h>
 #include <Config/WIFICredentials.h>
-
-// #include <Implementations/Servo/ServoImplementation.h>
-#include <Implementations/Wireless/WiFi/ESP8266WiFiImplementation.h>
 #include <Servo.h>
-
-// #include <Translators/Servo/MG90S-DriverOnly/MG90SCustomTranslator.h>
-// #include <Translators/Servo/GS1502/GS1502Translator.h>
-
-// #include <Translators/Potentiometer/A50K/A50KPotentiometerTranslator.h>
-
-// #include <Translators/LEDs/CommonLED.h>
 
 #include <Helpers/CharIdFloatInputParser.h>
 
-// #include <Translators/Debug/DebuggerTranslator.h>
 
-// #include <InputControllers/InputController.h>
-// #include <InputControllers/AccelerationController.h>
-// #include <InputControllers/SteeringController.h>
-
+	#include <WebSocketsServer.h>
 
 
 #ifndef WIFICREDENTIALS
@@ -67,25 +53,14 @@ int DEFAULT_BAULD_RATE = 9600;
  * using a wifi module.
  **/
 class NonClassExample {
-	// IControllableComponent *servoDirComp;
-	// IControllableComponent *servoVelComp;
+
+	WebSocketsServer webSocket;
 	
-	IWirelessCommComponent *websocketService;
 
-	// IServoImplementation *servoDirImpl;
-	// IServoImplementation *servoVelImpl;
-
-	// IControllerComponent *debugComp;
-
-	IWirelessWiFiImplementation *wifiService;
-
-	// SteeringController *steController;
-	// AccelerationController *accelController;
+	const int websocketPort = 80;
 
 	public:
-	NonClassExample() {
-
-	}
+	NonClassExample()	: webSocket(websocketPort) {	}
 
 	// SERVO
 	Servo servo;
@@ -169,7 +144,7 @@ class NonClassExample {
 		char buff[10] = "\0";
 		char debug[10] = "\0";
 
-		this->websocketService->read(buff);
+		this->read(buff);
 		this->parser->parse(buff, this->inputValue, 'a');
 
 		Serial.println(this->inputValue);
@@ -224,9 +199,152 @@ class NonClassExample {
 		return 0;	
 	}
 
+	//---------------- WIFI -------------------
 
+	bool isListening = false;
+	ESP8266WiFiClass wifiImpl;
 
+	void ESP8266WiFiImplementation(
+		const char *ssid, 
+		const char *password
+	) {
+		this->connect(ssid, password);
+	}
+
+	void connect(		
+		const char *ssid, 
+		const char *password
+	) {
+		this->wifiImpl.setSleepMode(WIFI_NONE_SLEEP);
+		this->wifiImpl.begin(ssid, password);
+	}
+
+	public: void WriteIP() {
+		Serial.println(this->wifiImpl.localIP());
+	}	
+
+	public: wl_status_t GetStatus() {
+		return this->wifiImpl.status();
+	}
+
+	void scanNetworks() {
+		int numberOfNetworks = this->wifiImpl.scanNetworks();
+
+		for(int i = 0; i < numberOfNetworks; i++) {
+			Serial.print("Network name: ");
+			Serial.println(this->wifiImpl.SSID(i));
+			Serial.print("Signal strength: ");
+			Serial.println(this->wifiImpl.RSSI(i));
+			Serial.println("-----------------------");
+		}
+	}
+	//---------------- WIFI -------------------
+
+	// -------------- WEBSOCKET ---------------
+
+	bool isOpen = false;
+	bool hasClientsConnected = false;
+	unsigned int bufferLength = 10;
+	char buffer[10];
+	uint8_t clientNumber = 0;
+
+	void WebsocketServerImplementation(
+		const int websocketPort,
+		unsigned int bufferLength = 10
+	)	
+	{
+		WebSocketsServer(websocketPort, "", "arduino");
+		this->bufferLength = bufferLength;
+		this->buffer[0] = '\0';
+	}
+
+	bool IsOpen() {
+		return this->isOpen;
+	}
+
+	bool HasClientsConnected() {
+		return this->hasClientsConnected;
+	}
+
+	void open() {
+		this->isOpen = true;
+		this->webSocket.begin();
+		this->webSocket.onEvent(
+			std::bind(
+				&NonClassExample::webSocketEvent, 
+				this,  
+				std::placeholders::_1, 
+				std::placeholders::_2, 
+				std::placeholders::_3,
+				std::placeholders::_4));
+	}
+
+	void close() {
+		this->webSocket.close();
+		this->isOpen = false;
+	}
+
+	void listen(char *buff) {}
+	void listen() {
+		this->webSocket.loop();
+	}
 	
+	void read(char *buff) {
+		const char *msg = this->buffer;
+		strcpy(buff, msg);
+	}
+
+
+	void send(const char *message) {
+		this->webSocket.sendTXT(this->clientNumber, message);
+	}
+
+	void webSocketEvent(
+		uint8_t num, 
+		WStype_t type, 
+		uint8_t * payload, 
+		size_t lenght
+	) {
+		switch (type) {
+			case WStype_DISCONNECTED:
+				{
+					strcpy(this->buffer, "");
+					this->hasClientsConnected = false;
+				}
+				break;	
+			case WStype_CONNECTED:
+				{ 
+					IPAddress ip = this->webSocket.remoteIP(num);
+					Serial.print("Client connected: ");
+					Serial.println(ip);
+					this->clientNumber = num;
+					this->hasClientsConnected = true;
+				}
+				break;	
+			case WStype_TEXT:
+				{ 
+					if(lenght <= this->bufferLength) {
+						const char *text = (const char*)payload;
+						strcpy(this->buffer, text);
+					}
+				}
+				break;
+			case WStype_ERROR:
+			case WStype_FRAGMENT:
+			case WStype_BIN:
+			case WStype_FRAGMENT_TEXT_START:
+			case WStype_FRAGMENT_BIN_START:
+			case WStype_FRAGMENT_FIN:
+			case WStype_PING:
+			case WStype_PONG:
+				{
+
+				}
+				break;
+		}
+	
+	}
+
 	void defineServoDevices() {
 		this->ServoImplementation(SERVO_ACCELERATION_PIN);
 	}
@@ -235,9 +353,12 @@ class NonClassExample {
 		int WEBSOCKET_PORT = 81;
 		this->parser = new CharIdFloatInputParser();
 
-		this->wifiService = new ESP8266WiFiImplementation(MY_SSID, MY_PASS);
-		this->websocketService = new WebsocketServerImplementation(WEBSOCKET_PORT);
+		this->ESP8266WiFiImplementation(MY_SSID, MY_PASS);
+		WebsocketServerImplementation(WEBSOCKET_PORT);
 	}
+
+	// -------------- WEBSOCKET --------------------
+
 
 	public:
 	void setup() 
@@ -252,7 +373,7 @@ class NonClassExample {
 	
 	void loop()
 	{ 
-		this->websocketService->listen();
+		this->listen();
 
 		this->updateVelocity();
 		//Serial.println((int)this->accelController->getCurrentAcceleration());
