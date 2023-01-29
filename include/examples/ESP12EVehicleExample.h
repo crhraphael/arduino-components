@@ -14,11 +14,9 @@
 #include <InputControllers/SteeringController.h>
 #include <InputControllers/HeadLightsController.h>
 
-#include <Translators/Debug/DebuggerTranslator.h>
 #include <Translators/LEDs/CommonLED.h>
-#include <Translators/Servo/MG90S-DriverOnly/MG90SCustomTranslator.h>
-#include <Translators/Servo/GS1502/GS1502Translator.h>
-#include <Translators/Potentiometer/A50K/A50KPotentiometerTranslator.h>
+#include <Translators/Servo/MG90S-DriverOnly/MG90SCustomDevice.h>
+#include <Translators/Servo/GS1502/GS1502Device.h>
 #include <Translators/LEDs/CommonLED.h>
 
 #include <Helpers/CharIdFloatInputParser.h>
