@@ -71,7 +71,7 @@ class MotorBluetoothExample {
 	
 	void defineServoDevice() {
 		this->servoImpl = new ServoImplementation(SERVO_PIN);
-		this->servoComponent = new MG90SCustomTranslator(this->servoImpl);
+		this->servoComponent = new MG90SCustomDevice(this->servoImpl);
 	}
 
 	void defineBluetoothDevice() {

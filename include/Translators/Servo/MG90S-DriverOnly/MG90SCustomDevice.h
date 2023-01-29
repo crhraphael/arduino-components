@@ -6,25 +6,25 @@
 #include <InputControllers/IControllableComponent.h>
 
 /**
- * Tradutor de dados customizado do Servo MG90S da `Tower Pro`.
+ * Maps a Device with a modified `Tower Pro` MG90S Servo.
  * 
- * Aplicacao em projetos onde o potenciometro dentro do 
- * conjunto não é usado/alterado com a rotacao do motor, 
- * mantendo a velocidade do motor constante.
+ * This code applies to modified servos where motor rotation
+ * is infinite and it controls only the speed and rotation direction
+ * (forward or backwards).
  * 
  * See: https://www.towerpro.com.tw/product/mg90s-3/
  */
-class MG90SCustomTranslator: public IArduinoComponent, public IControllableComponent {
+class MG90SCustomDevice: public IArduinoComponent, public IControllableComponent {
 	private:
 	IServoImplementation* servoImpl;
 	
 	/**
-	 * Valor máximo da velocidade do motor.
+	 * Constant value that represents  the max value to it's TOP ROTATION SPEED.
 	 */
 	const int MAX_ACCELERATION; 
 
 	/**
-	 * Valor que mantem o servo parado.
+	 * Constant value that represents a stopped (non rotating) servo.
 	 */
 	const int SERVO_STOPPED_VALUE;
 
@@ -32,7 +32,7 @@ class MG90SCustomTranslator: public IArduinoComponent, public IControllableCompo
 	int lastValueSent;
 
 	public:
-	MG90SCustomTranslator(
+	MG90SCustomDevice(
 		IServoImplementation* servoImpl, 
 		int maxIncrement, 
 		int neutralValue
@@ -56,7 +56,7 @@ class MG90SCustomTranslator: public IArduinoComponent, public IControllableCompo
 	}
 
   int translate(float accelCap) {
-		return (int)(this->SERVO_STOPPED_VALUE + ((float)MG90SCustomTranslator::MAX_ACCELERATION * accelCap));
+		return (int)(this->SERVO_STOPPED_VALUE + ((float)MG90SCustomDevice::MAX_ACCELERATION * accelCap));
 	}
 
 	int get() {

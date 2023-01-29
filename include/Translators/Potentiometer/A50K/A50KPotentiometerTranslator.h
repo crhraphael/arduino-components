@@ -1,6 +1,9 @@
 #include <Translators/Potentiometer/IPotentiometerInputTranslator.h>
 #include <InputControllers/IControllerComponent.h>
 
+/**
+ * Defines a potentiometer that can be read.
+*/
 class A50KPotentiometerTranslator: public IPotentiometerInputTranslator, public IControllerComponent {
 	private:
 	int pin;

@@ -8,7 +8,7 @@
 /**
  * Linear Servo Motor used mainly on airplane models.
  */
-class GS1502Translator: public IArduinoComponent, public IControllableComponent {
+class GS1502Device: public IArduinoComponent, public IControllableComponent {
 	private:
 	IServoImplementation* servoImpl;
 	
@@ -25,7 +25,7 @@ class GS1502Translator: public IArduinoComponent, public IControllableComponent 
 	int valueToSend;
 	int lastValueSent;
 	public:
-	GS1502Translator(
+	GS1502Device(
 		IServoImplementation* servoImpl, 
 		const int maxIncrement, 
 		const int neutralValue
@@ -50,7 +50,7 @@ class GS1502Translator: public IArduinoComponent, public IControllableComponent 
 	}
 
   int translate(float accelCap) {
-		return (int)(this->SERVO_STOPPED_VALUE + ((float)GS1502Translator::MAX_ACCELERATION * accelCap));
+		return (int)(this->SERVO_STOPPED_VALUE + ((float)GS1502Device::MAX_ACCELERATION * accelCap));
 	}
 
 	int get() {

@@ -68,15 +68,11 @@ int DEFAULT_BAULD_RATE = 9600;
  * Controls the velocity and direction of a servo
  * using a wifi module.
  **/
-class StructuredWirelessMotorExample {
+struct StructuredWirelessMotorExample {
 	IWirelessCommComponent *websocketService;
 	IWirelessWiFiImplementation *wifiService;
 
 	public:
-	StructuredWirelessMotorExample() {
-
-	}
-
 	// SERVO
 	Servo servo;
 	void ServoImplementation(int pin)

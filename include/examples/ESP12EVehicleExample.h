@@ -2,6 +2,7 @@
 #define ESP12EVEHICLEEXAMPLE
 
 #include <Arduino.h>
+
 #include <Config/WIFICredentials.h>
 
 #include <Implementations/Servo/ServoImplementation.h>
@@ -25,7 +26,6 @@
 
 // #include <States/IState.h>
 
-
 #ifndef WIFICREDENTIALS
 #error "This example must include the Config/WIFICredentials.h"
 #endif
@@ -46,17 +46,14 @@
 // A0   	ADC0    Analog Input			X	
 
 /**
- * Portas dos devices.
+ * Device's pins.
  */
 const int SERVO_DIRECTION_PIN = D2; 
 const int SERVO_ACCELERATION_PIN = D7; 
 
 const int LED_PIN = LED_BUILTIN | 2;
 
-const int DEFAULT_BAULD_RATE = 9600;
-
-// Interval in milliseconds
-const unsigned int interv = 500;
+const int DEFAULT_BAULD_RATE = 115200;
 
 /**
  * Experiment using an ESP32 Lolin v3 as prototype board
@@ -71,7 +68,7 @@ class ESP12EVehicleExample {
 
 	IInputParser *accelerationParser;
 	IInputParser *directionParser;
-	IInputParser *headlightsParser;
+	// IInputParser *headlightsParser;
 	
 	IWirelessWiFiImplementation *wifiService;
 	IWebsocketImplementation *websocketService;
@@ -94,7 +91,7 @@ class ESP12EVehicleExample {
 		this->servoDirImpl = new ServoImplementation(SERVO_DIRECTION_PIN);
 		const int maxIncrement = 45;
 		const int neutralValue = 100;
-		this->servoDirComp = new GS1502Translator(
+		this->servoDirComp = new GS1502Device(
 			this->servoDirImpl, 
 			maxIncrement, 
 			neutralValue
@@ -103,7 +100,7 @@ class ESP12EVehicleExample {
 		const int maxIncrementAccellServo = 14;
 		const int neutralValueAccellServo = 88;
 		this->servoVelImpl = new ServoImplementation(SERVO_ACCELERATION_PIN);
-		this->servoVelComp = new MG90SCustomTranslator(
+		this->servoVelComp = new MG90SCustomDevice(
 			this->servoVelImpl, 
 			maxIncrementAccellServo, 
 			neutralValueAccellServo
@@ -113,7 +110,7 @@ class ESP12EVehicleExample {
 	void defineInputParsers() {
 		this->accelerationParser = new CharIdFloatInputParser();
 		this->directionParser = new CharIdFloatInputParser();
-		this->headlightsParser = new HeadlightInputParser();
+		// this->headlightsParser = new HeadlightInputParser();
 	}
 
 	void defineWiFIModule() {
@@ -174,14 +171,15 @@ class ESP12EVehicleExample {
 			this->resetControllables();
 			return;
 		}
-		if(!this->websocketService->IsOpen()) {
+
+		if(this->websocketService->IsOpen()) {
+			this->websocketService->listen();
+		} else {
 			this->boardStatusLED->blink(500);
 			this->wifiService->WriteIP();
 			this->websocketService->open();
 			this->resetControllables();
 			return;
-		} else {
-			this->websocketService->listen();
 		}		
 
 		if(!this->websocketService->HasClientsConnected()) {
@@ -190,7 +188,7 @@ class ESP12EVehicleExample {
 			return;
 		} 
 
-		if(!this->hasSentCarInfo) {
+		if(!this->hasSentCarInfo && this->websocketService->HasClientsConnected()) {
 			this->websocketService->send(vehicleInfo);
 			this->hasSentCarInfo = true;
 			this->boardStatusLED->set(LED_ON);

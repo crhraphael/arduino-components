@@ -1,6 +1,11 @@
 #ifndef ICONTROLLABLECOMPONENT
 #define ICONTROLLABLECOMPONENT
 
+
+/**
+ * All devices that can be controlled via a pin port or wifi must implement this contract.
+ * As it represents a device that can be controlled. 
+*/
 class IControllableComponent {
 	private:
 	public:
