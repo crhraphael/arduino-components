@@ -10,8 +10,6 @@ class CharIdFloatInputParser : public IInputParser {
 	float lastValidValue = .0f;
 
   public:
-	void parse(char *buff, char result[4], char flagToCompare) {
-	}
 	void parse(char *buff, float &result, char flagToCompare) {
 		if(strcmp(buff, debug) != 0) {
 			const char payloadFlag = char(buff[0]);
@@ -26,20 +24,6 @@ class CharIdFloatInputParser : public IInputParser {
 				lastValidValue = value;
 			} else {
 				result = lastValidValue;
-			}
-		}
-	}
-	void parse(char *buff, float *result, char flagToCompare) {
-		if(strcmp(buff, debug) != 0) {
-			const char payloadFlag = char(buff[0]);
-
-
-			if(payloadFlag == flagToCompare) {
-				const int lenght = strlen(buff);
-				char target[10] = "\0";
-				getSubString(buff, target, 2, lenght);
-				float value = atof(target);
-				result = &value;
 			}
 		}
 	}
