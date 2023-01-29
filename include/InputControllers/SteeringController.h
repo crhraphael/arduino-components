@@ -4,8 +4,6 @@
 #define STEERING_FLAG 's'
 
 #include <Helpers/IInputParser.h>
-#include <Translators/Servo/MG90S-DriverOnly/MG90SCustomTranslator.h>
-#include <Translators/Potentiometer/IPotentiometerInputTranslator.h>
 #include <InputControllers/IControllableComponent.h>
 #include <InputControllers/IControllerComponent.h>
 
@@ -67,7 +65,7 @@ class SteeringController {
 		controller->read(buff);
 		this->inputParser->parse(buff, this->inputValue, STEERING_FLAG);
 
-		this->currentPosition = this->inputValue;
+		// this->currentPosition = this->inputValue;
 
 		this->controllableComponent->set(this->inputValue);
 

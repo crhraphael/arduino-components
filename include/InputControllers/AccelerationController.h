@@ -4,8 +4,6 @@
 #define ACCELERATION_FLAG 'a'
 
 #include <Helpers/IInputParser.h>
-#include <Translators/Servo/MG90S-DriverOnly/MG90SCustomTranslator.h>
-#include <Translators/Potentiometer/IPotentiometerInputTranslator.h>
 #include <InputControllers/IControllableComponent.h>
 #include <InputControllers/IControllerComponent.h>
 
@@ -74,44 +72,44 @@ class AccelerationController {
 		controller->read(buff);
 		this->inputParser->parse(buff, currentInput, ACCELERATION_FLAG);
 
-		float maxVel = currentInput;
+		// float maxVel = currentInput != 0 ? currentInput : 1;
 
-		if(this->currentVelocity <= 0) {
-			gearMod = .004f;
-		} else if(this->currentVelocity > 0 && this->currentVelocity < 0.15f) {
-			gearMod = .000045f;
-		} else if(this->currentVelocity >= 0.15f && this->currentVelocity < 0.3f) {
-			gearMod = .00005f;
-		} else if(this->currentVelocity >= 0.3f && this->currentVelocity < 0.5f) {
-			gearMod = .00001f;
-		} else if(this->currentVelocity >= 0.5f && this->currentVelocity < 0.75f) {
-			gearMod = .000005f;
-		} else if(this->currentVelocity >= 0.75f && this->currentVelocity <= 1.0f) {
-			gearMod = .000001f;
-		}
+	
+		// if(this->currentVelocity <= 0) {
+		// 	gearMod = .00008f;
+		// } else if(this->currentVelocity > 0 && this->currentVelocity < 0.15f) {
+		// 	gearMod = .000045f;
+		// } else if(this->currentVelocity >= 0.15f && this->currentVelocity < 0.3f) {
+		// 	gearMod = .00005f;
+		// } else if(this->currentVelocity >= 0.3f && this->currentVelocity < 0.5f) {
+		// 	gearMod = .00001f;
+		// } else if(this->currentVelocity >= 0.5f && this->currentVelocity < 0.75f) {
+		// 	gearMod = .000005f;
+		// } else if(this->currentVelocity >= 0.75f && this->currentVelocity <= 1.0f) {
+		// 	gearMod = .000001f;
+		// }
 
 		// unsigned int currentMillis = millis();
 		// unsigned int lastMillis = currentMillis; // State Stored
 		// unsigned int lastFrameMillis = currentMillis - lastMillis;
 
-		if(currentInput == 0) {
-			if(this->currentVelocity > 0) this->currentVelocity -= 0.0002f;
-			if(this->currentVelocity < 0) this->currentVelocity += 0.0002f;
-		} else {
-			float acceleration = currentInput * (motorPower * gearMod);
-			this->currentVelocity += acceleration;
-		}
+		// if(currentInput == 0) {
+		// 	if(this->currentVelocity > 0) this->currentVelocity -= 0.0002f;
+		// 	if(this->currentVelocity < 0) this->currentVelocity += 0.0002f;
+		// } else {
+		// 	float acceleration = currentInput * (motorPower * gearMod);
+		// 	this->currentVelocity += acceleration;
+		// }
 
 
 
 		// Keeps the maximum velocity between -1 and 1.
-		if(this->currentVelocity >= 1) this->currentVelocity = 1;
-		if(this->currentVelocity <= -1) this->currentVelocity = -1;
+		// if(this->currentVelocity >= 1) this->currentVelocity = 1;
+		// if(this->currentVelocity <= -1) this->currentVelocity = -1;
 		
-		if(this->currentVelocity > maxVel) this->currentVelocity = maxVel;
+		// if(this->currentVelocity > maxVel) this->currentVelocity = maxVel;
 
-
-		this->controllableComponent->set(this->currentVelocity);
+		this->controllableComponent->set(currentInput);
 	}
 
 	/**
