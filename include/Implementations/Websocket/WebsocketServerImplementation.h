@@ -12,7 +12,6 @@ class WebsocketServerImplementation:
 	unsigned int bufferLength = 10;
 	char buffer[10];
 	uint8_t clientNumber = 0;
-
 	public:
 	WebsocketServerImplementation(
 		const int websocketPort,
@@ -69,7 +68,7 @@ class WebsocketServerImplementation:
 		uint8_t num, 
 		WStype_t type, 
 		uint8_t * payload, 
-		size_t lenght
+		size_t length
 	) {
 		switch (type) {
 			case WStype_DISCONNECTED:
@@ -89,7 +88,7 @@ class WebsocketServerImplementation:
 				break;	
 			case WStype_TEXT:
 				{ 
-					if(lenght <= this->bufferLength) {
+					if(length <= this->bufferLength) {
 						const char *text = (const char*)payload;
 						strcpy(this->buffer, text);
 					}
