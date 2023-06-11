@@ -3,6 +3,9 @@
 
 #include "InputControllers/IControllerComponent.h"
 
+/**
+ * A Wireless Communication Controller Component interface.
+*/
 class IWirelessCommComponent: public IControllerComponent {
 	private:
 	public:

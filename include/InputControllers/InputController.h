@@ -9,7 +9,7 @@
 #include <InputControllers/RearLightsController.h>
 
 /**
- * Tradutor de dados 
+ * Data translator
  **/
 class InputController {
 	private:

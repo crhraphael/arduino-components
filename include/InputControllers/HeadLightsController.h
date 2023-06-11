@@ -2,7 +2,9 @@
 #define HEADLIGHTSCONTROLLER
 
 #include <Arduino.h>
-
+#include <InputControllers/IControllerComponent.h>
+#include <InputControllers/IControllableComponent.h>
+#include <Helpers/IInputParser.h>
 class HeadLightsController {
 	IControllableComponent *frontLeftHeadlightLED;
 	IControllableComponent *frontRightHeadlightLED;
