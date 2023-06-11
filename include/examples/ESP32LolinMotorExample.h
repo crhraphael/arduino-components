@@ -82,9 +82,10 @@ class ESP32LolinMotorExample {
 		this->defineServoDevices();
 		this->definePotentiometerDevice();
 
-		this->accelController = new AccelerationController(
-			this->servoVelComp, 
-			this->potentiometerComponent);
+		// this->accelController = new AccelerationController(
+		// 	this->servoVelComp, 
+		// 	this->potentiometerComponent
+		// );
 		// this->steController = new SteeringController(			
 		// 	this->servoDirComp, 
 		// 	this->potentiometerComponent);
@@ -93,7 +94,7 @@ class ESP32LolinMotorExample {
 	void loop()
 	{ 
 		//this->steController->update();
-		this->accelController->update();
+		// this->accelController->update();
 
 		//Serial.println((int)this->accelController->getCurrentAcceleration());
 	} 

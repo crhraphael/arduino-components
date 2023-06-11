@@ -9,15 +9,17 @@
 #include <Implementations/Wireless/WiFi/ESP8266WiFiImplementation.h>
 #include <Implementations/Websocket/WebsocketServerImplementation.h>
 
+#include <examples/Vehicle/VehicleData.h>
+
 #include <InputControllers/InputController.h>
 #include <InputControllers/AccelerationController.h>
 #include <InputControllers/SteeringController.h>
 #include <InputControllers/HeadLightsController.h>
 
-#include <Translators/LEDs/CommonLED.h>
-#include <Translators/Servo/MG90S-DriverOnly/MG90SCustomDevice.h>
-#include <Translators/Servo/GS1502/GS1502Device.h>
-#include <Translators/LEDs/CommonLED.h>
+#include <Devices/LEDs/CommonLED.h>
+#include <Devices/Servo/MG90S-DriverOnly/MG90SCustomDevice.h>
+#include <Devices/Servo/GS1502/GS1502Servo.h>
+#include <Devices/LEDs/CommonLED.h>
 
 #include <Helpers/CharIdFloatInputParser.h>
 #include <Helpers/HeadlightInputParser.h>
@@ -44,7 +46,7 @@
 // A0   	ADC0    Analog Input			X	
 
 /**
- * Device's pins.
+ * Devices' pins.
  */
 const int SERVO_DIRECTION_PIN = D2; 
 const int SERVO_ACCELERATION_PIN = D7; 
@@ -85,11 +87,79 @@ class ESP12EVehicleExample {
 	CommonLED *frontLeftHeadlightLED;
 	CommonLED *frontRightHeadlightLED;
 
+	bool hasSentCarInfo = false;
+
+	const char* vehicleInfo = "{\"type\":'car-info',\"title\":'John',\"year\":'1000'}";
+	// IState* currentState;
+
+	VehicleData vehicleData;
+
+	void setup() 
+	{ 
+		Serial.begin(DEFAULT_BAULD_RATE);
+
+		vehicleData = VehicleData();
+		this->boardStatusLED = new CommonLED(LED_PIN);
+		this->boardStatusLED->set(LED_OFF);
+		this->defineServoDevices();
+		this->defineInputParsers();
+		this->defineWiFIModule();
+		this->defineControllers();
+	}
+
+	void loop()
+	{ 
+		// Not connected to the network...
+		if(this->wifiService->GetStatus() != wl_status_t::WL_CONNECTED) {
+			this->boardStatusLED->blink(1000);
+			this->resetControllables(0);
+			return;
+		}
+
+		// Not connected to the network...
+		if(this->websocketService->IsOpen()) {
+			this->websocketService->listen();
+		} else {
+			this->boardStatusLED->blink(500);
+			this->wifiService->WriteIP();
+			this->websocketService->open();
+			this->resetControllables(0);
+			return;
+		}		
+
+		if(!this->websocketService->HasClientsConnected()) {
+			this->boardStatusLED->blink(100);
+			this->resetControllables(0);
+			return;
+		} 
+
+		if(!this->hasSentCarInfo && this->websocketService->HasClientsConnected()) {
+			this->websocketService->send(vehicleInfo);
+			this->hasSentCarInfo = true;
+			this->boardStatusLED->set(LED_ON);
+		}
+
+
+		this->accelController->update(this->websocketService);
+		// this->steController->update(this->websocketService);
+
+		// this->headlightsController->update();
+
+	}
+	
+	/**
+	 * Resets controllables to a default value.
+	 **/
+	void resetControllables(int value) {
+		this->accelController->setSpeed(value);
+		this->steController->setSpeed(value);
+	}
+	
 	void defineServoDevices() {
 		this->servoDirImpl = new ServoImplementation(SERVO_DIRECTION_PIN);
 		const int maxIncrement = 45;
 		const int neutralValue = 100;
-		this->servoDirComp = new GS1502Device(
+		this->servoDirComp = new GS1502Servo(
 			this->servoDirImpl, 
 			maxIncrement, 
 			neutralValue
@@ -136,69 +206,6 @@ class ESP12EVehicleExample {
 		// );
 	}
 
-	void setup() 
-	{ 
-		Serial.begin(DEFAULT_BAULD_RATE);
-		this->boardStatusLED = new CommonLED(LED_PIN);
-		this->boardStatusLED->set(LED_OFF);
-		this->defineServoDevices();
-		this->defineInputParsers();
-		this->defineWiFIModule();
-		this->defineControllers();
-
-	}
-	
-	bool hasSentCarInfo = false;
-
-	const char* vehicleInfo = "{\"type\":'car-info',\"title\":'John',\"year\":'1000'}";
-
-	/**
-	 * Resets controllables to a default value.
-	 **/
-	void resetControllables() {
-		this->accelController->setSpeed(0);
-		this->steController->setSpeed(0);
-	}
-
-	// IState* currentState;
-
-	void loop()
-	{ 
-		if(this->wifiService->GetStatus() != wl_status_t::WL_CONNECTED) {
-			this->boardStatusLED->blink(250);
-			this->resetControllables();
-			return;
-		}
-
-		if(this->websocketService->IsOpen()) {
-			this->websocketService->listen();
-		} else {
-			this->boardStatusLED->blink(500);
-			this->wifiService->WriteIP();
-			this->websocketService->open();
-			this->resetControllables();
-			return;
-		}		
-
-		if(!this->websocketService->HasClientsConnected()) {
-			this->boardStatusLED->blink(1000);
-			this->resetControllables();
-			return;
-		} 
-
-		if(!this->hasSentCarInfo && this->websocketService->HasClientsConnected()) {
-			this->websocketService->send(vehicleInfo);
-			this->hasSentCarInfo = true;
-			this->boardStatusLED->set(LED_ON);
-		}
-
-
-		this->accelController->update(this->websocketService);
-		// this->steController->update(this->websocketService);
-
-		// this->headlightsController->update();
-
-	}
 };
 
 #endif
