@@ -1,4 +1,4 @@
-#include <Translators/Potentiometer/IPotentiometerInputTranslator.h>
+#include <Devices/Potentiometer/IPotentiometerInputTranslator.h>
 #include <InputControllers/IControllerComponent.h>
 
 /**

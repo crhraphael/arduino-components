@@ -4,16 +4,15 @@
 #include <Implementations/Servo/ServoImplementation.h>
 #include <Implementations/Wireless/Bluetooth/BTSoftwareSerialImplementation.h>
 
-#include <Translators/Servo/MG90S-DriverOnly/MG90SCustomTranslator.h>
-#include <Translators/Wireless/Bluetooth/HC06Translator.h>
-#include <Translators/LEDs/CommonLED.h>
+#include <Devices/Servo/MG90S-DriverOnly/MG90SCustomDevice.h>
+#include <Devices/Wireless/Bluetooth/HC06Device.h>
+#include <Devices/LEDs/CommonLED.h>
 
 #include <InputControllers/InputController.h>
 #include <InputControllers/AccelerationController.h>
 #include <InputControllers/SteeringController.h>
 
 #include <Arduino.h>
-
 
 class Vehicle {
 	IControllableComponent* steeringMotor;

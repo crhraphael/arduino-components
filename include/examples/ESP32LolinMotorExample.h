@@ -4,9 +4,9 @@
 
 #include <Implementations/Wireless/WiFi/ESP8266WiFiImplementation.h>
 
-#include <Translators/Servo/MG90S-DriverOnly/MG90SCustomTranslator.h>
-#include <Translators/Potentiometer/A50K/A50KPotentiometerTranslator.h>
-#include <Translators/LEDs/CommonLED.h>
+#include <Devices/Servo/MG90S-DriverOnly/MG90SCustomDevice.h>
+#include <Devices/Potentiometer/A50K/A50KPotentiometerTranslator.h>
+#include <Devices/LEDs/CommonLED.h>
 
 #include <InputControllers/InputController.h>
 #include <InputControllers/AccelerationController.h>

@@ -1,7 +1,7 @@
 #ifndef COMMONLED
 #define COMMONLED
 
-#include <Translators/LEDs/ILEDComponent.h>
+#include <Devices/LEDs/ILEDComponent.h>
 #include <InputControllers/IControllableComponent.h>
 
 #define LED_ON LOW

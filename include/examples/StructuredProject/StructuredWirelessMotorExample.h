@@ -10,16 +10,16 @@
 
 #include <Implementations/Websocket/WebsocketServerImplementation.h>
 
-// #include <Translators/Servo/MG90S-DriverOnly/MG90SCustomTranslator.h>
-// #include <Translators/Servo/GS1502/GS1502Translator.h>
+// #include <Devices/Servo/MG90S-DriverOnly/MG90SCustomTranslator.h>
+// #include <Devices/Servo/GS1502/GS1502Translator.h>
 
-// #include <Translators/Potentiometer/A50K/A50KPotentiometerTranslator.h>
+// #include <Devices/Potentiometer/A50K/A50KPotentiometerTranslator.h>
 
-// #include <Translators/LEDs/CommonLED.h>
+// #include <Devices/LEDs/CommonLED.h>
 
 #include <Helpers/CharIdFloatInputParser.h>
 
-// #include <Translators/Debug/DebuggerTranslator.h>
+// #include <Devices/Debug/DebuggerTranslator.h>
 
 // #include <InputControllers/InputController.h>
 // #include <InputControllers/AccelerationController.h>
