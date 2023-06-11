@@ -26,6 +26,7 @@ struct ESP8266WiFiImplementation {
 		const char *ssid, 
 		const char *password
 	) {
+		wifiImpl.mode(WIFI_STA);
 		wifiImpl.setSleepMode(WIFI_NONE_SLEEP);
 		wifiImpl.begin(ssid, password);
 	}
