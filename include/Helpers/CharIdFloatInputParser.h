@@ -7,6 +7,8 @@
 class CharIdFloatInputParser : public IInputParser {
   private:
 	char debug[10] = "\0";
+	char buff[10] = "\0";
+	
 	float lastValidValue = .0f;
 
   public:
@@ -27,6 +29,27 @@ class CharIdFloatInputParser : public IInputParser {
 			}
 		}
 	}
+
+	void parse(float &result, IControllerComponent* controller, char flagToCompare) {
+		controller->read(buff);
+
+		if(strcmp(buff, debug) != 0) {
+			const char payloadFlag = char(buff[0]);
+
+
+			if(payloadFlag == flagToCompare) {
+				const int lenght = strlen(buff);
+				char target[10] = "\0";
+				getSubString(buff, target, 2, lenght);
+				float value = atof(target);
+				result = value;
+				lastValidValue = value;
+			} else {
+				result = lastValidValue;
+			}
+		}
+	}
+
 	int getSubString(char *source, char *target,int from, int to) {
 		int length=0;
 		int i=0,j=0;

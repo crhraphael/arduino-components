@@ -67,10 +67,9 @@ class AccelerationController {
 	}
 
 	void update(IControllerComponent* controller) {
-		char buff[10] = "\000000000";
 		float currentInput = .0f;
-		controller->read(buff);
-		this->inputParser->parse(buff, currentInput, ACCELERATION_FLAG);
+		this->inputParser->parse(currentInput, controller, ACCELERATION_FLAG);
+		this->controllableComponent->set(currentInput);
 
 		// float maxVel = currentInput != 0 ? currentInput : 1;
 
@@ -109,7 +108,7 @@ class AccelerationController {
 		
 		// if(this->currentVelocity > maxVel) this->currentVelocity = maxVel;
 
-		this->controllableComponent->set(currentInput);
+		// this->controllableComponent->set(currentInput);
 	}
 
 	/**

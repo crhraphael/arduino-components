@@ -1,6 +1,9 @@
 #ifndef ICONTROLLERCOMPONENT
 #define ICONTROLLERCOMPONENT
 
+/**
+ * All devices that reads input are controllers.
+*/
 class IControllerComponent {
 	private:
 	public:
