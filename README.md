@@ -10,6 +10,7 @@ A fully functional code library with many implementations of electronic componen
 * [REQUIREMENTS](#requirements)
 * [DESCRIPTION](#description)
 * [DISCLAIMER](#disclaimer)
+* [DEFINITIONS AND NAMING](#definitions-and-names)
 * [EMOJIS](#emojis)
 * [INSTALLING](#installing)
 * [UPLOAD](#running)
@@ -39,10 +40,10 @@ The codes found here are just pieces I wrote for my personal projects and felt l
 
 Most of it may or may not be bad examples. They work for my purposes and are all results of a good amount of time spent re-learning C++ and it's compilers.
 
-There are `dynamic allocations` and I am trying to write all of it following the `S.O.L.I.D.` principles. 
-I do know that many developers are against use of OOP for embeeded microchips, but the code does not aim to be the final form of anything. 
-And I made a non OOP example with ease just by copying and pasting the OOP ones, so everything here can be used for prototyping.
+The code uses `dynamic allocations` since I am applying `SOLID` principles to the code base. 
+I do know that many developers are against use of OOP for embeeded microchips, but the code does not aim to be the final form of anything. And I made a non OOP example with ease just by copying and pasting the OOP ones, so everything here can be used for prototyping.
 
+## DEFINITIONS AND NAMING
 
 As this repository grows, many new components will be added and later surely it will need some reorganizing.
 If you know how those components works, you can build the circuit by yourself.
@@ -53,11 +54,11 @@ If you know how those components works, you can build the circuit by yourself.
 
 `implementations` combines a specific library/logic to work with a component or feature of the board.
 
-`translators` translates a real component and it's behaviour to code.
+`devices` translates a real eletronic component and it's behaviour to code.
 
 `helpers` contains code that does not belong to a specific scenario yet, most of it should be moved to specific folders within time.
 
-`controllers` are places to put together components interaction logics.
+`controllers` are places to put together components that are part of the same micro system (logic-wise).
 
 
 Since this project does not target a specific project/purpose, many examples can be built, so the `main.cpp` will be constantly modified to adequate the most recent examples, or the ones I use the most.
@@ -72,7 +73,7 @@ Since this project does not target a specific project/purpose, many examples can
 ## INSTALLING
 [goto index](#index)
 
-After downloading and installing all requirements, the only step left is to build and download the PlatformIO requirements defined on the .ini file.
+After downloading  installing all [`requirements`](#requirements), the only step left is to build to download the project dependencies defined on the `platformio.ini` file.
 
 ## UPLOAD
 [goto index](#index)
@@ -81,7 +82,7 @@ Follow PlatformIO tutorials (remember to select the correct environment variable
 
 ## TESTS
 [goto index](#index)
-
+No tests yet. I know PlatformIO has a test suit, but I had no interest since this project is too generic
 
 ## ENVIRONMENT VARIABLES
 [goto index](#index)

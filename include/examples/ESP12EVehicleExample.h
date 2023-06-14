@@ -125,7 +125,7 @@ class ESP12EVehicleExample {
 			return;
 		}		
 
-			this->websocketService->listen();
+		this->websocketService->listen();
 
 		if(!this->websocketService->HasClientsConnected()) {
 			this->boardStatusLED->blink(100);
