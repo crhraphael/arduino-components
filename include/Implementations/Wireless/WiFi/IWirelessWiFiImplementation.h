@@ -7,7 +7,7 @@ class IWirelessWiFiImplementation {
   public:
   virtual ~IWirelessWiFiImplementation() = 0;
 	virtual wl_status_t GetStatus() = 0;
-	virtual void WriteIP() = 0;
+	virtual void printIP() = 0;
 };
 
 IWirelessWiFiImplementation::~IWirelessWiFiImplementation() {};

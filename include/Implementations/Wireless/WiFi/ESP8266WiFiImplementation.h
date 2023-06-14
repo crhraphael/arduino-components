@@ -33,7 +33,7 @@ class ESP8266WiFiImplementation: public IWirelessWiFiImplementation {
 		this->connect(ssid, password);
 	}
 
-	public: void WriteIP() {
+	public: void printIP() {
 		Serial.println(this->wifiImpl.localIP());
 	}	
 

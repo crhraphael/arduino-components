@@ -87,7 +87,7 @@ class ESP12EVehicleExample {
 	CommonLED *frontLeftHeadlightLED;
 	CommonLED *frontRightHeadlightLED;
 
-	bool hasSentCarInfo = false;
+	bool hasSentVehicleData = false;
 
 	const char* vehicleInfo = "{\"type\":'car-info',\"title\":'John',\"year\":'1000'}";
 	// IState* currentState;
@@ -117,15 +117,15 @@ class ESP12EVehicleExample {
 		}
 
 		// Not connected to the network...
-		if(this->websocketService->IsOpen()) {
-			this->websocketService->listen();
-		} else {
+		if(!this->websocketService->IsOpen()) {
 			this->boardStatusLED->blink(500);
-			this->wifiService->WriteIP();
+			this->wifiService->printIP();
 			this->websocketService->open();
 			this->resetControllables(0);
 			return;
 		}		
+
+			this->websocketService->listen();
 
 		if(!this->websocketService->HasClientsConnected()) {
 			this->boardStatusLED->blink(100);
@@ -133,9 +133,9 @@ class ESP12EVehicleExample {
 			return;
 		} 
 
-		if(!this->hasSentCarInfo && this->websocketService->HasClientsConnected()) {
+		if(!this->hasSentVehicleData && this->websocketService->HasClientsConnected()) {
 			this->websocketService->send(vehicleInfo);
-			this->hasSentCarInfo = true;
+			this->hasSentVehicleData = true;
 			this->boardStatusLED->set(LED_ON);
 		}
 

@@ -115,7 +115,7 @@ class RemoteHeadlightsExample {
 			return;
 		}
 		if(!this->websocketService->IsOpen()) {
-			this->wifiService->WriteIP();
+			this->wifiService->printIP();
 			this->websocketService->open();
 			return;
 		}
